@@ -52,11 +52,17 @@ public class Menus {
 			hmeta.setOwner(p.getName());
 			hmeta.setDisplayName(ChatColor.GOLD + "Player Stats");
 			ArrayList<String> lore = new ArrayList<>();
-			lore.add(" ");
 			lore.add(ChatColor.GRAY + "=-=-=-=-=-=-=-=-=");
 			lore.add(" ");
 			lore.add(ChatColor.AQUA + "Name: " + p.getName());
-			lore.add(ChatColor.AQUA + "more stats...");
+			Arena a = ArenaManager.get().getArena(p);
+			if (a != null) {
+				if (Arena.containsPlayer(p)) {
+					Data d = Arena.getData(p);
+					int score = d.getScore();
+					lore.add(ChatColor.AQUA + "Score: " + score);
+				}
+			}
 			lore.add(" ");
 			lore.add(ChatColor.GRAY + "=-=-=-=-=-=-=-=-=");
 			hmeta.setLore(lore);
