@@ -1,0 +1,7 @@
+name: Build
+author: likeapig
+version: 0.1
+main: com.likeapig.build.Build
+
+commands:
+  b:
