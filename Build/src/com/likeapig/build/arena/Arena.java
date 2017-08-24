@@ -251,8 +251,8 @@ public class Arena {
 
 				@Override
 				public void run() {
-					Location loc = builder.getLocation().add(0, 2, 0);
-					displayColoredParticle(loc, "3232FF");
+					Location loc = builder.getLocation().add(0, 2.5, 0);
+					displayColoredParticle(loc, "FFD700");
 				}
 			}, 0L, 0L);
 		}
