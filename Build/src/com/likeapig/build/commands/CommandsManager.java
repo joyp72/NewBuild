@@ -42,7 +42,7 @@ public class CommandsManager implements CommandExecutor {
 		cmds.add(new Score());
 		cmds.add(new SetLobby());
 		cmds.add(new Gui());
-		cmds.add(new SetCoins());
+		cmds.add(new AddCoins());
 		gui = true;
 	}
 

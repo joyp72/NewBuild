@@ -148,9 +148,10 @@ public class Arena {
 		}
 	}
 
-	private void endRound() {
+	public void endRound() {
 		Timer.get().stopTasks(this);
 		countdown = 0;
+		message(ChatColor.YELLOW + "The word was " + word + ".");
 		startNewRound();
 	}
 
@@ -256,7 +257,6 @@ public class Arena {
 		if (f) {
 			message(ChatColor.GREEN + "Everyone has guessed the word!");
 			endRound();
-			countdown = 40;
 		}
 	}
 
@@ -328,14 +328,14 @@ public class Arena {
 					} else {
 						s = String.valueOf(s) + ", " + d.getPlayer().getName() + " (" + d.getScore() + ")";
 					}
-					MegaData.addCoins(d.getPlayer().getName(), 1);
+					MegaData.addCoins(d.getPlayer().getName());
 					MegaData.addGW(d.getPlayer().getName(), 1);
 					MessageManager.get().message(d.getPlayer(), ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
 				}
 				message(s);
 			} else {
 				message(ChatColor.GOLD + "Winner: " + winners.get(0).getPlayer().getName() + " (" + winners.get(0).getScore() + ")");
-				MegaData.addCoins(winners.get(0).getPlayer().getName(), 1);
+				MegaData.addCoins(winners.get(0).getPlayer().getName());
 				MegaData.addGW(winners.get(0).getPlayer().getName(), 1);
 				MessageManager.get().message(winners.get(0).getPlayer(), ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
 			}

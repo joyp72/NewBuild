@@ -23,7 +23,7 @@ public class Stop extends Commands {
         	MessageManager.get().message(sender, "The arena has not been started!", MessageType.BAD);
         	return;
         }
-        a.stop();
+        a.endRound();
     }
 
 }

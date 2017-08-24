@@ -63,22 +63,22 @@ public class MegaData {
 	}
 
 	public static void setCoins(String name, int i) {
-		int coins = getCoinsData(name + coinspath);
+		int coins = getCoins(name);
 		coins = i;
 		setCoinsData(name, coins);
 	}
 
-	public static void addCoins(String name, int i) {
-		int coins = getCoinsData(name + coinspath);
-		coins = coins + i;
-		setCoinsData(name, coins);
+	public static void addCoins(String name) {
+		int coins = getCoins(name);
+		int fcoins = coins + 1;
+		setCoinsData(name, fcoins);
 	}
 
 	public static int getCoinsData(String path) {
 		return coinsConfig.getInt(path + coinspath);
 	}
 
-	public static void setCoinsData(final String path, final Object value) {
+	public static void setCoinsData(final String path, final int value) {
 		MegaData.coinsConfig.set(path + coinspath, value);
 		try {
 			MegaData.coinsConfig.save(coinsFile);
@@ -108,13 +108,13 @@ public class MegaData {
 	}
 
 	public static void setGC(String name, int i) {
-		int gc = getGCData(name + guessedcorrect);
+		int gc = getGCData(name);
 		gc = i;
 		setGCData(name, gc);
 	}
 
 	public static void addGC(String name, int i) {
-		int gc = getGCData(name + guessedcorrect);
+		int gc = getGCData(name);
 		gc = gc + i;
 		setGCData(name, gc);
 	}
@@ -149,13 +149,13 @@ public class MegaData {
 	}
 
 	public static void setRW(String name, int i) {
-		int rw = getRWData(name + roundswon);
+		int rw = getRWData(name);
 		rw = i;
 		setRWData(name, rw);
 	}
 
 	public static void addRW(String name, int i) {
-		int rw = getRWData(name + roundswon);
+		int rw = getRWData(name);
 		rw = rw + i;
 		setRWData(name, rw);
 	}
@@ -190,13 +190,13 @@ public class MegaData {
 	}
 
 	public static void setGW(String name, int i) {
-		int gw = getGWData(name + gameswon);
+		int gw = getGWData(name);
 		gw = i;
 		setGWData(name, gw);
 	}
 
 	public static void addGW(String name, int i) {
-		int gw = getGWData(name + gameswon);
+		int gw = getGWData(name);
 		gw = gw + i;
 		setGWData(name, gw);
 	}
