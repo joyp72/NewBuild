@@ -43,6 +43,8 @@ public class CommandsManager implements CommandExecutor {
 		cmds.add(new SetLobby());
 		cmds.add(new Gui());
 		cmds.add(new AddCoins());
+		cmds.add(new Disguise());
+		cmds.add(new RemoveDisguise());
 		gui = true;
 	}
 

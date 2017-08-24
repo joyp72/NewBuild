@@ -16,6 +16,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -105,6 +106,14 @@ public class ArenaListener implements Listener {
 		final Arena a = ArenaManager.get().getArena(e.getPlayer());
 		if (a != null) {
 			a.handleChat(e);
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerBubbleChat(final PlayerChatEvent e) {
+		final Arena a = ArenaManager.get().getArena(e.getPlayer());
+		if (a != null) {
+			a.handleBubbleChat(e);
 		}
 	}
 

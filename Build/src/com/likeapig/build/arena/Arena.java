@@ -9,13 +9,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.event.player.PlayerChatEvent;
 
+import com.likeapig.bubble.Bubble;
 import com.likeapig.build.Build;
 import com.likeapig.build.Settings;
 import com.likeapig.build.commands.MessageManager;
 import com.likeapig.build.commands.MessageManager.MessageType;
+import com.likeapig.build.commands.RemoveDisguise;
 import com.likeapig.build.utils.LocationUtils;
 
 public class Arena {
@@ -127,6 +128,7 @@ public class Arena {
 			d.restore();
 			if (p == builder) {
 				builderStopEffect();
+				DisguiseClass.disguise(p, p.getName());;
 			}
 			datas.remove(d);
 			if (state.equals(ArenaState.STARTING) && getNumberOfPlayer() < minPlayers) {
@@ -161,6 +163,9 @@ public class Arena {
 		countdown = 0;
 		message(ChatColor.YELLOW + "The word was " + word + ".");
 		builderStopEffect();
+		for (Player p : getPlayers()) {
+			DisguiseClass.disguise(p, p.getName());;
+		}
 		startNewRound();
 	}
 
@@ -199,6 +204,7 @@ public class Arena {
 	private void teleportBuilderToSpawn() {
 		if (builder != null) {
 			builderEffect(builder);
+			DisguiseClass.disguise(builder, "bobthebuiler");
 			builder.teleport(spawn);
 		}
 	}
@@ -312,6 +318,32 @@ public class Arena {
 			e.setMessage(ChatColor.GRAY + s);
 		}
 	}
+	
+	public void handleBubbleChat(PlayerChatEvent e) {
+		String s = e.getMessage().toLowerCase();
+		Player p = e.getPlayer();
+		if (isStarted()) {
+			if (p.equals(builder)) {
+				e.setCancelled(true);
+				return;
+			}
+			Data d = getData(p);
+			if (d.guessedWord()) {
+				e.setCancelled(true);
+				return;
+			}
+			if (s.contains(word)) {
+				e.setCancelled(true);
+				return;
+			} else {
+				Bubble bubble = new Bubble(p.getLocation(), s);
+				bubble.setCancelTask(Bukkit.getScheduler().runTaskTimer(Build.getInstance(), bubble, 0L, 2L));
+			}
+		} else {
+			Bubble bubble = new Bubble(p.getLocation(), s);
+			bubble.setCancelTask(Bukkit.getScheduler().runTaskTimer(Build.getInstance(), bubble, 0L, 2L));
+		}
+	}
 
 	public void startNewRound() {
 		getNewWord();
@@ -392,7 +424,6 @@ public class Arena {
 				Timer.get().createTimer(getArena(), "endround", 30).startTimer(getArena(), "endround");
 			}
 		}, 20L);
-		//Timer.get().createTimer(this, "endround", 30).startTimer(this, "endround");
 	}
 
 	public void stop() {

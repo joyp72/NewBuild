@@ -2,6 +2,7 @@ package com.likeapig.build;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.likeapig.bubble.BubbleListener;
 import com.likeapig.build.arena.Arena;
 import com.likeapig.build.arena.ArenaListener;
 import com.likeapig.build.arena.ArenaManager;
@@ -24,6 +25,7 @@ public class Build extends JavaPlugin {
 		MenusListener.get().setup();
 		CommandsManager.get().setup();
 		MegaData.get().setup(this);
+		//BubbleListener.get().setup();
 		
 	}
 	
