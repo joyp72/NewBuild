@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 
 import com.likeapig.build.arena.Arena;
 import com.likeapig.build.arena.ArenaManager;
+import com.likeapig.build.arena.Timer;
 import com.likeapig.build.commands.MessageManager.MessageType;
 
 public class Stop extends Commands {
@@ -24,6 +25,7 @@ public class Stop extends Commands {
         	return;
         }
         a.endRound();
+        MessageManager.get().message(sender, "round ended");
     }
 
 }

@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
+import com.likeapig.build.Build;
 import com.likeapig.build.Settings;
 import com.likeapig.build.commands.MessageManager;
 import com.likeapig.build.commands.MessageManager.MessageType;
@@ -29,6 +33,7 @@ public class Arena {
 	private static List<Data> datas;
 	private ArenaState state;
 	private int countdown;
+	private int id;
 
 	static {
 		wordsSetup = false;
@@ -120,6 +125,9 @@ public class Arena {
 		if (containsPlayer(p)) {
 			Data d = getData(p);
 			d.restore();
+			if (p == builder) {
+				builderStopEffect();
+			}
 			datas.remove(d);
 			if (state.equals(ArenaState.STARTING) && getNumberOfPlayer() < minPlayers) {
 				this.setState(ArenaState.WAITING);
@@ -152,6 +160,7 @@ public class Arena {
 		Timer.get().stopTasks(this);
 		countdown = 0;
 		message(ChatColor.YELLOW + "The word was " + word + ".");
+		builderStopEffect();
 		startNewRound();
 	}
 
@@ -189,6 +198,7 @@ public class Arena {
 
 	private void teleportBuilderToSpawn() {
 		if (builder != null) {
+			builderEffect(builder);
 			builder.teleport(spawn);
 		}
 	}
@@ -227,6 +237,23 @@ public class Arena {
 			}
 		}
 		setState(ArenaState.STOPPED);
+	}
+
+	public void builderEffect(Player builder) {
+		if (builder != null) {
+			id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
+
+				@Override
+				public void run() {
+					Location loc = builder.getLocation().add(0, 2, 0);
+					displayColoredParticle(loc, "3232FF");
+				}
+			}, 0L, 0L);
+		}
+	}
+	
+	public void builderStopEffect() {
+		Bukkit.getServer().getScheduler().cancelTask(id);
 	}
 
 	private void onWordGuessed(Data d) {
@@ -330,14 +357,17 @@ public class Arena {
 					}
 					MegaData.addCoins(d.getPlayer().getName());
 					MegaData.addGW(d.getPlayer().getName(), 1);
-					MessageManager.get().message(d.getPlayer(), ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
+					MessageManager.get().message(d.getPlayer(),
+							ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
 				}
 				message(s);
 			} else {
-				message(ChatColor.GOLD + "Winner: " + winners.get(0).getPlayer().getName() + " (" + winners.get(0).getScore() + ")");
+				message(ChatColor.GOLD + "Winner: " + winners.get(0).getPlayer().getName() + " ("
+						+ winners.get(0).getScore() + ")");
 				MegaData.addCoins(winners.get(0).getPlayer().getName());
 				MegaData.addGW(winners.get(0).getPlayer().getName(), 1);
-				MessageManager.get().message(winners.get(0).getPlayer(), ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
+				MessageManager.get().message(winners.get(0).getPlayer(),
+						ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
 			}
 			stop();
 			ArenaListener.get().removeBlocks();
@@ -357,13 +387,16 @@ public class Arena {
 		teleportBuilderToSpawn();
 		teleportAllPlayers();
 		ArenaListener.get().removeBlocks();
-		Timer.get().createTimer(this, "endround", 40).startTimer(this, "endround");
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
+			public void run() {
+				Timer.get().createTimer(getArena(), "endround", 30).startTimer(getArena(), "endround");
+			}
+		}, 20L);
+		//Timer.get().createTimer(this, "endround", 30).startTimer(this, "endround");
 	}
 
 	public void stop() {
-		if (!(getState().equals(ArenaState.WAITING))) {
-			Timer.get().stopTasks(this);
-		}
+		Timer.get().stopTasks(this);
 		setState(ArenaState.WAITING);
 		kickAll(true);
 	}
@@ -438,6 +471,10 @@ public class Arena {
 	public String getName() {
 		return name;
 	}
+	
+	public Arena getArena() {
+		return this;
+	}
 
 	public String getStateName() {
 		return state.getName();
@@ -465,6 +502,119 @@ public class Arena {
 
 		public String getName() {
 			return this.name;
+		}
+	}
+
+	public static void displayColoredParticle(Location loc, ParticleEffect type, String hexVal, float xOffset,
+			float yOffset, float zOffset) {
+		int R = 0;
+		int G = 0;
+		int B = 0;
+
+		if (hexVal.length() <= 6) {
+			R = Integer.valueOf(hexVal.substring(0, 2), 16);
+			G = Integer.valueOf(hexVal.substring(2, 4), 16);
+			B = Integer.valueOf(hexVal.substring(4, 6), 16);
+			if (R <= 0) {
+				R = 1;
+			}
+		} else if (hexVal.length() <= 7 && hexVal.substring(0, 1).equals("#")) {
+			R = Integer.valueOf(hexVal.substring(1, 3), 16);
+			G = Integer.valueOf(hexVal.substring(3, 5), 16);
+			B = Integer.valueOf(hexVal.substring(5, 7), 16);
+			if (R <= 0) {
+				R = 1;
+			}
+		}
+
+		loc.setX(loc.getX() + Math.random() * (xOffset / 2 - -(xOffset / 2)));
+		loc.setY(loc.getY() + Math.random() * (yOffset / 2 - -(yOffset / 2)));
+		loc.setZ(loc.getZ() + Math.random() * (zOffset / 2 - -(zOffset / 2)));
+
+		if (type == ParticleEffect.RED_DUST || type == ParticleEffect.REDSTONE) {
+			ParticleEffect.RED_DUST.display(R, G, B, 0.004F, 0, loc, 255.0);
+		} else if (type == ParticleEffect.SPELL_MOB || type == ParticleEffect.MOB_SPELL) {
+			ParticleEffect.SPELL_MOB.display((float) 255 - R, (float) 255 - G, (float) 255 - B, 1, 0, loc, 255.0);
+		} else if (type == ParticleEffect.SPELL_MOB_AMBIENT || type == ParticleEffect.MOB_SPELL_AMBIENT) {
+			ParticleEffect.SPELL_MOB_AMBIENT.display((float) 255 - R, (float) 255 - G, (float) 255 - B, 1, 0, loc,
+					255.0);
+		} else {
+			ParticleEffect.RED_DUST.display(0, 0, 0, 0.004F, 0, loc, 255.0D);
+		}
+	}
+
+	public static void displayColoredParticle(Location loc, String hexVal) {
+		int R = 0;
+		int G = 0;
+		int B = 0;
+
+		if (hexVal.length() <= 6) {
+			R = Integer.valueOf(hexVal.substring(0, 2), 16);
+			G = Integer.valueOf(hexVal.substring(2, 4), 16);
+			B = Integer.valueOf(hexVal.substring(4, 6), 16);
+			if (R <= 0) {
+				R = 1;
+			}
+		} else if (hexVal.length() <= 7 && hexVal.substring(0, 1).equals("#")) {
+			R = Integer.valueOf(hexVal.substring(1, 3), 16);
+			G = Integer.valueOf(hexVal.substring(3, 5), 16);
+			B = Integer.valueOf(hexVal.substring(5, 7), 16);
+			if (R <= 0) {
+				R = 1;
+			}
+		}
+		ParticleEffect.RED_DUST.display(R, G, B, 0.004F, 0, loc, 257D);
+	}
+
+	public static void displayColoredParticle(Location loc, String hexVal, float xOffset, float yOffset,
+			float zOffset) {
+		int R = 0;
+		int G = 0;
+		int B = 0;
+
+		if (hexVal.length() <= 6) {
+			R = Integer.valueOf(hexVal.substring(0, 2), 16);
+			G = Integer.valueOf(hexVal.substring(2, 4), 16);
+			B = Integer.valueOf(hexVal.substring(4, 6), 16);
+			if (R <= 0) {
+				R = 1;
+			}
+		} else if (hexVal.length() <= 7 && hexVal.substring(0, 1).equals("#")) {
+			R = Integer.valueOf(hexVal.substring(1, 3), 16);
+			G = Integer.valueOf(hexVal.substring(3, 5), 16);
+			B = Integer.valueOf(hexVal.substring(5, 7), 16);
+			if (R <= 0) {
+				R = 1;
+			}
+		}
+
+		loc.setX(loc.getX() + Math.random() * (xOffset / 2 - -(xOffset / 2)));
+		loc.setY(loc.getY() + Math.random() * (yOffset / 2 - -(yOffset / 2)));
+		loc.setZ(loc.getZ() + Math.random() * (zOffset / 2 - -(zOffset / 2)));
+
+		ParticleEffect.RED_DUST.display(R, G, B, 0.004F, 0, loc, 257D);
+	}
+
+	public static void displayParticleVector(Location loc, ParticleEffect type, float xTrans, float yTrans,
+			float zTrans) {
+		if (type == ParticleEffect.FIREWORKS_SPARK) {
+			ParticleEffect.FIREWORKS_SPARK.display(xTrans, yTrans, zTrans, 0.09F, 0, loc, 257D);
+		} else if (type == ParticleEffect.SMOKE || type == ParticleEffect.SMOKE_NORMAL) {
+			ParticleEffect.SMOKE.display(xTrans, yTrans, zTrans, 0.04F, 0, loc, 257D);
+		} else if (type == ParticleEffect.LARGE_SMOKE || type == ParticleEffect.SMOKE_LARGE) {
+			ParticleEffect.LARGE_SMOKE.display(xTrans, yTrans, zTrans, 0.04F, 0, loc, 257D);
+		} else if (type == ParticleEffect.ENCHANTMENT_TABLE) {
+			ParticleEffect.ENCHANTMENT_TABLE.display(xTrans, yTrans, zTrans, 0.5F, 0, loc, 257D);
+		} else if (type == ParticleEffect.PORTAL) {
+			ParticleEffect.PORTAL.display(xTrans, yTrans, zTrans, 0.5F, 0, loc, 257D);
+		} else if (type == ParticleEffect.FLAME) {
+			ParticleEffect.FLAME.display(xTrans, yTrans, zTrans, 0.04F, 0, loc, 257D);
+		} else if (type == ParticleEffect.CLOUD) {
+			ParticleEffect.CLOUD.display(xTrans, yTrans, zTrans, 0.04F, 0, loc, 257D);
+		} else if (type == ParticleEffect.SNOW_SHOVEL) {
+			ParticleEffect.SNOW_SHOVEL.display(xTrans, yTrans, zTrans, 0.2F, 0, loc, 257D);
+		} else {
+			ParticleEffect.RED_DUST.display(0, 0, 0, 0.004F, 0, loc, 257D);
 		}
 	}
 }
