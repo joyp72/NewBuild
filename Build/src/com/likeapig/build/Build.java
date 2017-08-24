@@ -6,6 +6,7 @@ import com.likeapig.build.arena.Arena;
 import com.likeapig.build.arena.ArenaListener;
 import com.likeapig.build.arena.ArenaManager;
 import com.likeapig.build.arena.ConfigManager;
+import com.likeapig.build.arena.MegaData;
 import com.likeapig.build.arena.MenusListener;
 import com.likeapig.build.commands.CommandsManager;
 
@@ -22,6 +23,7 @@ public class Build extends JavaPlugin {
 		ArenaListener.get().setup();
 		MenusListener.get().setup();
 		CommandsManager.get().setup();
+		MegaData.get().setup(this);
 		
 	}
 	

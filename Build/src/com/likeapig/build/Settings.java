@@ -31,7 +31,7 @@ public class Settings
                 this.arenaFile.createNewFile();
             }
             catch (Exception e) {
-                p.getLogger().info("Failed to generate arena file !");
+                p.getLogger().info("Failed to generate arena file!");
                 e.printStackTrace();
             }
         }

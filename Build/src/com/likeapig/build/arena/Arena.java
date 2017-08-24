@@ -97,7 +97,6 @@ public class Arena {
 		setState(ArenaState.WAITING);
 	}
 
-	
 	public void setState(ArenaState a) {
 		state = a;
 	}
@@ -235,6 +234,7 @@ public class Arena {
 			message(ChatColor.GREEN + d.getPlayer().getName() + " Guessed the word!");
 			MessageManager.get().message(d.getPlayer(), "You are the first to guess correct! (+3)", MessageType.GOOD);
 			d.increaseScore(3);
+			MegaData.addGC(d.getPlayer().getName(), 1);
 			ActionBars.get().addActionBar(d.getPlayer(), "§e§lScore: " + d.getScore());
 			getData(builder).increaseScore(2);
 			ActionBars.get().addActionBar(builder, "§e§lScore: " + d.getScore());
@@ -243,6 +243,7 @@ public class Arena {
 			message(ChatColor.GREEN + d.getPlayer().getName() + " Guessed the word!");
 			MessageManager.get().message(d.getPlayer(), "You guessed correct! (+1)", MessageType.GOOD);
 			d.increaseScore(1);
+			MegaData.addGC(d.getPlayer().getName(), 1);
 			ActionBars.get().addActionBar(d.getPlayer(), "§e§lScore: " + d.getScore());
 		}
 		d.setGuessedWord(true);
@@ -327,10 +328,16 @@ public class Arena {
 					} else {
 						s = String.valueOf(s) + ", " + d.getPlayer().getName() + " (" + d.getScore() + ")";
 					}
+					MegaData.addCoins(d.getPlayer().getName(), 1);
+					MegaData.addGW(d.getPlayer().getName(), 1);
+					MessageManager.get().message(d.getPlayer(), ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
 				}
 				message(s);
 			} else {
-				message(ChatColor.GOLD + "Winner: " + winners.get(0).getPlayer().getName());
+				message(ChatColor.GOLD + "Winner: " + winners.get(0).getPlayer().getName() + " (" + winners.get(0).getScore() + ")");
+				MegaData.addCoins(winners.get(0).getPlayer().getName(), 1);
+				MegaData.addGW(winners.get(0).getPlayer().getName(), 1);
+				MessageManager.get().message(winners.get(0).getPlayer(), ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
 			}
 			stop();
 			ArenaListener.get().removeBlocks();
@@ -354,7 +361,9 @@ public class Arena {
 	}
 
 	public void stop() {
-		Timer.get().stopTasks(this);
+		if (!(getState().equals(ArenaState.WAITING))) {
+			Timer.get().stopTasks(this);
+		}
 		setState(ArenaState.WAITING);
 		kickAll(true);
 	}
@@ -415,6 +424,11 @@ public class Arena {
 	}
 
 	public void start() {
+		for (Data d : datas) {
+			if (d.getArena() == this) {
+				MegaData.addRW(d.getPlayer().getName(), 1);
+			}
+		}
 		Arena.builder = null;
 		Timer.get().stopTasks(this);
 		this.setState(ArenaState.STARTED);
@@ -428,7 +442,7 @@ public class Arena {
 	public String getStateName() {
 		return state.getName();
 	}
-	
+
 	public ArenaState getState() {
 		return state;
 	}

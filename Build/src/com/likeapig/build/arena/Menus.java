@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -45,29 +46,61 @@ public class Menus {
 			arenas.setItemMeta(meta);
 			mi.setItem(6, arenas);
 		}
-		
+
 		ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
 		{
 			SkullMeta hmeta = (SkullMeta) head.getItemMeta();
 			hmeta.setOwner(p.getName());
 			hmeta.setDisplayName(ChatColor.GOLD + "Player Stats");
 			ArrayList<String> lore = new ArrayList<>();
-			lore.add(ChatColor.GRAY + "=-=-=-=-=-=-=-=-=");
+			lore.add(ChatColor.DARK_GRAY + "=-=-=-=-=-=-=-=-=");
 			lore.add(" ");
-			lore.add(ChatColor.AQUA + "Name: " + p.getName());
 			Arena a = ArenaManager.get().getArena(p);
 			if (a != null) {
 				if (Arena.containsPlayer(p)) {
 					Data d = Arena.getData(p);
 					int score = d.getScore();
-					lore.add(ChatColor.AQUA + "Score: " + score);
+					lore.add(ChatColor.GREEN + "Score: " + ChatColor.GRAY + score);
 				}
 			}
+			lore.add(ChatColor.GREEN + "Games Played: " + ChatColor.GRAY + MegaData.getRW(p.getName()));
+			lore.add(ChatColor.GREEN + "Games Won: " + ChatColor.GRAY + MegaData.getGW(p.getName()));
+			lore.add(ChatColor.GREEN + "Guessed Correct: " + ChatColor.GRAY + MegaData.getGC(p.getName()));
 			lore.add(" ");
-			lore.add(ChatColor.GRAY + "=-=-=-=-=-=-=-=-=");
+			lore.add(ChatColor.YELLOW + "MegaCoins: " + ChatColor.GRAY + MegaData.getCoins(p.getName()));
+			lore.add(" ");
+			lore.add(ChatColor.DARK_GRAY + "=-=-=-=-=-=-=-=-=");
 			hmeta.setLore(lore);
 			head.setItemMeta(hmeta);
 			mi.setItem(2, head);
+		}
+
+		ItemStack info = new ItemStack(Material.BOOK_AND_QUILL);
+		{
+			ItemMeta meta = info.getItemMeta();
+			meta.setDisplayName(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Mega" + ChatColor.AQUA + "" + ChatColor.BOLD + "Build");
+			ArrayList<String> lore = new ArrayList<>();
+			lore.add(ChatColor.GRAY + "By like_a_pig");
+			lore.add("");
+			lore.add(ChatColor.GRAY + "instructions.txt");
+			meta.setLore(lore);
+			info.setItemMeta(meta);
+			mi.setItem(4, info);
+		}
+		
+		ItemStack blank = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
+		{
+			ItemMeta meta = blank.getItemMeta();
+			meta.setDisplayName(" ");
+			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+			blank.setItemMeta(meta);
+			mi.setItem(0, blank);
+			mi.setItem(1, blank);
+			mi.setItem(3, blank);
+			mi.setItem(5, blank);
+			mi.setItem(7, blank);
+			mi.setItem(8, blank);
+			
 		}
 
 		if (ArenaManager.get().getArenas().size() > 0) {
@@ -138,11 +171,11 @@ public class Menus {
 		}
 
 		Arena pa = ArenaManager.get().getArena(p);
-		
+
 		if (pa == null) {
 			ItemStack back = new ItemStack(Material.BEDROCK);
 			{
-				ItemMeta meta  = back.getItemMeta();
+				ItemMeta meta = back.getItemMeta();
 				meta.setDisplayName(ChatColor.RED + "Back to Menu");
 				ArrayList<String> lore = new ArrayList<>();
 				lore.add(ChatColor.GRAY + "Click to go back to Menu!");
@@ -151,7 +184,7 @@ public class Menus {
 			}
 			ai.setItem(8, back);
 		}
-		
+
 		if (pa != null) {
 			if (ArenaManager.get().getArenas().size() > 0) {
 				ItemStack item = new ItemStack(Material.BEDROCK);
