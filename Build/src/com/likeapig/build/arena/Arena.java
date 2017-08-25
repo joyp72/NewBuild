@@ -6,18 +6,28 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 import com.likeapig.bubble.Bubble;
 import com.likeapig.build.Build;
 import com.likeapig.build.Settings;
 import com.likeapig.build.commands.MessageManager;
 import com.likeapig.build.commands.MessageManager.MessageType;
-import com.likeapig.build.commands.RemoveDisguise;
 import com.likeapig.build.utils.LocationUtils;
+
+import net.minecraft.server.v1_12_R1.EntityPlayer;
 
 public class Arena {
 
@@ -35,6 +45,9 @@ public class Arena {
 	private ArenaState state;
 	private int countdown;
 	private int id;
+	private int id2;
+	private int barID;
+	BossBar b = Bukkit.createBossBar(" ", BarColor.YELLOW, BarStyle.SOLID, new BarFlag[0]);
 
 	static {
 		wordsSetup = false;
@@ -42,7 +55,7 @@ public class Arena {
 
 	public Arena(String name, Location location) {
 		state = ArenaState.STOPPED;
-		minPlayers = 2;
+		minPlayers = 4;
 		maxPlayers = 6;
 		wordGuessed = false;
 		datas = new ArrayList<Data>();
@@ -113,6 +126,8 @@ public class Arena {
 			datas.add(d);
 			d.resetPlayer();
 			p.teleport(lobby);
+			playerEffect(p);
+			addScoreBar(p);
 			message(ChatColor.GREEN + p.getName() + " joined the arena!");
 			if (state.equals(ArenaState.WAITING) && getNumberOfPlayer() == minPlayers) {
 				start();
@@ -126,9 +141,12 @@ public class Arena {
 		if (containsPlayer(p)) {
 			Data d = getData(p);
 			d.restore();
+			removeScoreBar(p);
+			playerStopEffect();
 			if (p == builder) {
 				builderStopEffect();
-				DisguiseClass.disguise(p, p.getName());;
+				DisguiseClass.disguise(p, p.getName());
+				;
 			}
 			datas.remove(d);
 			if (state.equals(ArenaState.STARTING) && getNumberOfPlayer() < minPlayers) {
@@ -163,8 +181,10 @@ public class Arena {
 		countdown = 0;
 		message(ChatColor.YELLOW + "The word was " + word + ".");
 		builderStopEffect();
+		playerStopEffect();
 		for (Player p : getPlayers()) {
-			DisguiseClass.disguise(p, p.getName());;
+			DisguiseClass.disguise(p, p.getName());
+			;
 		}
 		startNewRound();
 	}
@@ -204,6 +224,7 @@ public class Arena {
 	private void teleportBuilderToSpawn() {
 		if (builder != null) {
 			builderEffect(builder);
+			playerStopEffect();
 			DisguiseClass.disguise(builder, "bobthebuiler");
 			builder.teleport(spawn);
 		}
@@ -213,6 +234,7 @@ public class Arena {
 		for (Player p : getPlayers()) {
 			if (p != builder) {
 				p.teleport(lobby);
+				playerEffect(p);
 			}
 		}
 	}
@@ -244,6 +266,26 @@ public class Arena {
 		}
 		setState(ArenaState.STOPPED);
 	}
+	
+	public void addScoreBar(Player p) {
+		if (p != null) {
+			barID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
+				
+				@Override
+				public void run() {
+					Data d = getData(p);
+					b.addPlayer(p);
+					b.setTitle(ChatColor.YELLOW + " " + ChatColor.BOLD + "Score: " + d.getScore());
+					b.setVisible(true);
+				}
+			}, 0L, 0L);
+		}
+	}
+	
+	public void removeScoreBar(Player p) {
+		Bukkit.getServer().getScheduler().cancelTask(barID);
+		b.removePlayer(p);
+	}
 
 	public void builderEffect(Player builder) {
 		if (builder != null) {
@@ -257,9 +299,26 @@ public class Arena {
 			}, 0L, 0L);
 		}
 	}
-	
+
 	public void builderStopEffect() {
 		Bukkit.getServer().getScheduler().cancelTask(id);
+	}
+
+	public void playerEffect(Player player) {
+		if (player != null) {
+			id2 = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
+
+				@Override
+				public void run() {
+					Location loc = player.getLocation().add(0, 2.5, 0);
+					displayColoredParticle(loc, "808080");
+				}
+			}, 0L, 0L);
+		}
+	}
+
+	public void playerStopEffect() {
+		Bukkit.getServer().getScheduler().cancelTask(id2);
 	}
 
 	private void onWordGuessed(Data d) {
@@ -269,16 +328,13 @@ public class Arena {
 			MessageManager.get().message(d.getPlayer(), "You are the first to guess correct! (+3)", MessageType.GOOD);
 			d.increaseScore(3);
 			MegaData.addGC(d.getPlayer().getName(), 1);
-			ActionBars.get().addActionBar(d.getPlayer(), "§e§lScore: " + d.getScore());
 			getData(builder).increaseScore(2);
-			ActionBars.get().addActionBar(builder, "§e§lScore: " + d.getScore());
 			MessageManager.get().message(builder, "Someone guessed correct! (+2)", MessageType.GOOD);
 		} else {
 			message(ChatColor.GREEN + d.getPlayer().getName() + " Guessed the word!");
 			MessageManager.get().message(d.getPlayer(), "You guessed correct! (+1)", MessageType.GOOD);
 			d.increaseScore(1);
 			MegaData.addGC(d.getPlayer().getName(), 1);
-			ActionBars.get().addActionBar(d.getPlayer(), "§e§lScore: " + d.getScore());
 		}
 		d.setGuessedWord(true);
 		boolean f = true;
@@ -318,7 +374,7 @@ public class Arena {
 			e.setMessage(ChatColor.GRAY + s);
 		}
 	}
-	
+
 	public void handleBubbleChat(PlayerChatEvent e) {
 		String s = e.getMessage().toLowerCase();
 		Player p = e.getPlayer();
@@ -363,7 +419,7 @@ public class Arena {
 			}
 		}
 		builder = selected.getPlayer();
-		if (selected.getTimeBuild() > 2 - 1) {
+		if (selected.getTimeBuild() > 3 - 1) {
 			final List<Data> winners = new ArrayList<Data>();
 			for (Data p2 : datas) {
 				if (winners.isEmpty()) {
@@ -379,6 +435,9 @@ public class Arena {
 				}
 			}
 			message(ChatColor.GOLD + "GAME OVER");
+			for (Player p : getPlayers()) {
+				Titles.get().addTitle(p, "§c§lGAME OVER");
+			}
 			if (winners.size() > 1) {
 				String s = ChatColor.GOLD + "Winners: ";
 				for (Data d : winners) {
@@ -393,9 +452,15 @@ public class Arena {
 							ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
 				}
 				message(s);
+				for (Player p : getPlayers()) {
+					Titles.get().addSubTitle(p, s);
+				}
 			} else {
 				message(ChatColor.GOLD + "Winner: " + winners.get(0).getPlayer().getName() + " ("
 						+ winners.get(0).getScore() + ")");
+				for (Player p : getPlayers()) {
+					Titles.get().addSubTitle(p, "§6Winner: " + winners.get(0).getPlayer().getName() + " (" + winners.get(0).getScore() + ")");
+				}
 				MegaData.addCoins(winners.get(0).getPlayer().getName());
 				MegaData.addGW(winners.get(0).getPlayer().getName(), 1);
 				MessageManager.get().message(winners.get(0).getPlayer(),
@@ -421,13 +486,24 @@ public class Arena {
 		ArenaListener.get().removeBlocks();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
 			public void run() {
-				Timer.get().createTimer(getArena(), "endround", 30).startTimer(getArena(), "endround");
+				Timer.get().createTimer(getArena(), "endround", 60).startTimer(getArena(), "endround");
 			}
 		}, 20L);
 	}
 
+	public void firework(Location l) {
+		Firework firework = (Firework) l.getWorld().spawnEntity(l, EntityType.FIREWORK);
+		FireworkMeta meta = firework.getFireworkMeta();
+		FireworkEffect.Builder builder = FireworkEffect.builder();
+		builder.withTrail().withFlicker().withColor(Color.AQUA, Color.WHITE).with(FireworkEffect.Type.BALL_LARGE);
+		meta.addEffect(builder.build());
+		meta.setPower(0);
+		firework.setFireworkMeta(meta);
+	}
+
 	public void stop() {
 		Timer.get().stopTasks(this);
+		firework(getSpawn());
 		setState(ArenaState.WAITING);
 		kickAll(true);
 	}
@@ -442,6 +518,10 @@ public class Arena {
 
 	public Player getBuilder() {
 		return builder;
+	}
+
+	public Location getSpawn() {
+		return spawn;
 	}
 
 	public List<Player> getPlayers() {
@@ -502,7 +582,7 @@ public class Arena {
 	public String getName() {
 		return name;
 	}
-	
+
 	public Arena getArena() {
 		return this;
 	}

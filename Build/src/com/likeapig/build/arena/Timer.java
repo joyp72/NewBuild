@@ -49,6 +49,8 @@ public class Timer {
 					}
 				}
 				
+			} else {
+				return;
 			}
 		}
 		catch (Exception ex) {}

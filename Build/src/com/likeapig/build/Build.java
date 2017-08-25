@@ -33,7 +33,7 @@ public class Build extends JavaPlugin {
 		getLogger().info("Disabled!");
 		for (Arena a : ArenaManager.get().getArenas()) {
 			a.stop();
-			a.kickAll(false);
+			a.kickAll(true);
 		}
 	}
 	

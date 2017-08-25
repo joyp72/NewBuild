@@ -31,20 +31,43 @@ public class ConfigManager
             
             {
                 this.add("Hippie");
-                this.add("Dniym");
-                this.add("Chanlder");
-                this.add("IceCreamMan");
-                this.add("Boi");
+                this.add("Ice Cream Man");
+                this.add("Bucket");
                 this.add("Giant");
                 this.add("Pig");
                 this.add("Cow");
                 this.add("Portal");
                 this.add("Bed");
-                this.add("BlackHole");
+                this.add("Black Hole");
                 this.add("Moon");
                 this.add("Water");
                 this.add("Sun");
                 this.add("Rain");
+                this.add("Gun");
+                this.add("Fish");
+                this.add("House");
+                this.add("Trash");
+                this.add("Car");
+                this.add("Rainbow");
+                this.add("Seesaw");
+                this.add("Bridge");
+                this.add("Cold");
+                this.add("Helicopter");
+                this.add("Poop");
+                this.add("Heart");
+                this.add("Mario");
+                this.add("Triangle");
+                this.add("Church");
+                this.add("Balloon");
+                this.add("Vacuum");
+                this.add("Bread");
+                this.add("Boat");
+                this.add("Dog");
+                this.add("Earth");
+                this.add("Window");
+                this.add("Tree");
+                this.add("Pencil");
+                this.add("Computer");
             }
         };
     }
