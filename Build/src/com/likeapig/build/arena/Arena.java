@@ -42,7 +42,7 @@ public class Arena {
 
 	public Arena(String name, Location location) {
 		state = ArenaState.STOPPED;
-		minPlayers = 2;
+		minPlayers = 4;
 		maxPlayers = 6;
 		wordGuessed = false;
 		datas = new ArrayList<Data>();
