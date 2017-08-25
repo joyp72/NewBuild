@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import com.likeapig.build.Build;
 import com.likeapig.build.arena.Arena.ArenaState;
 
 import net.md_5.bungee.api.ChatColor;
@@ -22,6 +23,7 @@ public class Menus {
 	private static Inventory mi;
 	private int size = 9;
 	private int slot = 0;
+	private int i = 1;
 	private String bm = sendCenteredMessage("Arenas");
 	private String mm = sendCenteredMessage("Main Menu");
 

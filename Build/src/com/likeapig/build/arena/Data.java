@@ -45,7 +45,7 @@ public class Data
         this.sc = p.getScoreboard();
     }
     
-    protected void increaseScore(final int i) {
+    public void increaseScore(final int i) {
         this.score += i;
     }
     
