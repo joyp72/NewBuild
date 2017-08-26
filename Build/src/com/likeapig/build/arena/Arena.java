@@ -125,7 +125,7 @@ public class Arena {
 			datas.add(d);
 			d.resetPlayer();
 			p.teleport(lobby);
-			Particles.get().addPlayerEffect(p);
+			//Particles.get().addPlayerEffect(p);
 			addScoreBar(p);
 			message(ChatColor.GREEN + p.getName() + " joined the arena!");
 			if (state.equals(ArenaState.WAITING) && getNumberOfPlayer() == minPlayers) {
@@ -144,7 +144,7 @@ public class Arena {
 			Particles.get().removePlayerEffect();
 			if (p == builder) {
 				Particles.get().removeBuilderEffect();
-				DisguiseClass.disguise(p, p.getName());
+				//DisguiseClass.disguise(p, p.getName());
 				;
 			}
 			datas.remove(d);
@@ -182,7 +182,7 @@ public class Arena {
 		Particles.get().removeBuilderEffect();
 		Particles.get().removePlayerEffect();
 		for (Player p : getPlayers()) {
-			DisguiseClass.disguise(p, p.getName());
+			//DisguiseClass.disguise(p, p.getName());
 			;
 		}
 		startNewRound();
@@ -224,7 +224,7 @@ public class Arena {
 		if (builder != null) {
 			Particles.get().addBuilderEffect(builder);
 			Particles.get().removePlayerEffect();
-			DisguiseClass.disguise(builder, "bobthebuiler");
+			//DisguiseClass.disguise(builder, "bobthebuiler");
 			builder.teleport(spawn);
 		}
 	}
@@ -437,7 +437,7 @@ public class Arena {
 				public void run() {
 					stop();
 				}
-			}, 60L);
+			}, 30L);
 			ArenaListener.get().removeBlocks();
 			return;
 		}
@@ -477,6 +477,7 @@ public class Arena {
 			Timer.get().stopTasks(this);
 		}
 		setState(ArenaState.WAITING);
+		Particles.get().removeAllEffect();
 		kickAll(true);
 	}
 

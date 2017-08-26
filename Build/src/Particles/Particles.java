@@ -58,6 +58,10 @@ public class Particles {
 			Bukkit.getServer().getScheduler().cancelTask(id4);
 	}
 	
+	public void removeAllEffect() {
+		Bukkit.getServer().getScheduler().cancelAllTasks();
+	}
+	
 	public void PlayerCircleEffect(Player player) {
 		if (player != null) {
 			id3 = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
