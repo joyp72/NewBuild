@@ -44,7 +44,6 @@ public class ArenaManager {
 					}
 					try {
 						this.registerArena(s, loc);
-						Build.getInstance().getLogger().info("Found arena: " + s);
 					} catch (Exception ex) {
 						Build.getInstance().getLogger().info("Exception ocurred when loading arena: " + s);
 						ex.printStackTrace();

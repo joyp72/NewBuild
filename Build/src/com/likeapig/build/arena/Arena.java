@@ -265,11 +265,11 @@ public class Arena {
 		}
 		setState(ArenaState.STOPPED);
 	}
-	
+
 	public void addScoreBar(Player p) {
 		if (p != null) {
 			barID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
-				
+
 				@Override
 				public void run() {
 					Data d = getData(p);
@@ -280,7 +280,7 @@ public class Arena {
 			}, 0L, 0L);
 		}
 	}
-	
+
 	public void removeScoreBar(Player p) {
 		Bukkit.getServer().getScheduler().cancelTask(barID);
 		b.removePlayer(p);
@@ -424,7 +424,8 @@ public class Arena {
 				message(ChatColor.GOLD + "Winner: " + winners.get(0).getPlayer().getName() + " ("
 						+ winners.get(0).getScore() + ")");
 				for (Player p : getPlayers()) {
-					Titles.get().addSubTitle(p, "§6Winner: " + winners.get(0).getPlayer().getName() + " (" + winners.get(0).getScore() + ")");
+					Titles.get().addSubTitle(p, "§6Winner: " + winners.get(0).getPlayer().getName() + " ("
+							+ winners.get(0).getScore() + ")");
 				}
 				MegaData.addCoins(winners.get(0).getPlayer().getName());
 				MegaData.addGW(winners.get(0).getPlayer().getName(), 1);
@@ -472,7 +473,9 @@ public class Arena {
 	}
 
 	public void stop() {
-		Timer.get().stopTasks(this);
+		if (this != null) {
+			Timer.get().stopTasks(this);
+		}
 		setState(ArenaState.WAITING);
 		kickAll(true);
 	}

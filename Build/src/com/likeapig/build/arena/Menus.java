@@ -91,17 +91,6 @@ public class Menus {
 			head.setItemMeta(hmeta);
 			mi.setItem(1, head);
 		}
-		
-		ItemStack balance = new ItemStack(Material.DOUBLE_PLANT, 1, (short) 0);
-		{
-			ItemMeta meta = balance.getItemMeta();
-			meta.setDisplayName(ChatColor.YELLOW + "MegaCoins: " + ChatColor.GRAY + MegaData.getCoins(p.getName()));
-			ArrayList<String> lore = new ArrayList<>();
-			lore.clear();
-			meta.setLore(lore);
-			balance.setItemMeta(meta);
-			si.setItem(28, balance);
-		}
 
 		ItemStack info = new ItemStack(Material.BOOK_AND_QUILL);
 		{

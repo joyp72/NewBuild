@@ -100,10 +100,7 @@ public class MenusListener implements Listener {
 					e.setCancelled(true);
 					p.openInventory(Menus.getInvMain());
 				}
-				if (e.getCurrentItem().getType() == Material.DOUBLE_PLANT) {
-					e.setCancelled(true);
-				}
-				if (e.getCurrentItem().getType() == Material.STAINED_GLASS_PANE) {
+				if (e.getCurrentItem().getType() == Material.STAINED_GLASS_PANE || e.getCurrentItem().getType() == Material.BOOK || e.getCurrentItem().getType() == Material.DOUBLE_PLANT || e.getCurrentItem().getType() == Material.SIGN) {
 					e.setCancelled(true);
 				}
 			}

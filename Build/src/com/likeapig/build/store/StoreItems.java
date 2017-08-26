@@ -46,7 +46,7 @@ public class StoreItems {
 	public StoreItems(Player p) {
 
 		if (activated == null) {
-			setActivated(activated = new Activate("default", p));
+			setActivated(new Activate("default", p));
 		}
 
 		si = Menus.getInvStore();
@@ -63,7 +63,7 @@ public class StoreItems {
 				lore.add(ChatColor.GRAY + "(Click to activate)");
 			}
 			lore.add("");
-			lore.add(ChatColor.WHITE + "Description: " + ChatColor.GRAY + "A dot that appears above your head");
+			lore.add(ChatColor.WHITE + "Desc: " + ChatColor.GRAY + "A dot that appears above your head");
 			meta.addItemFlags(ItemFlag.values());
 			meta.setLore(lore);
 			de.setItemMeta(meta);
@@ -90,7 +90,7 @@ public class StoreItems {
 			}
 			lore.add(" ");
 			lore.add(ChatColor.WHITE + "Cost: " + ChatColor.GRAY + "50 " + ChatColor.YELLOW + "MegaCoins");
-			lore.add(ChatColor.WHITE + "Description: " + ChatColor.GRAY + "A circle that appears above your head");
+			lore.add(ChatColor.WHITE + "Desc: " + ChatColor.GRAY + "A circle that appears above your head");
 			meta.addItemFlags(ItemFlag.values());
 			meta.setLore(lore);
 			halo.setItemMeta(meta);
@@ -98,6 +98,34 @@ public class StoreItems {
 				halo.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
 			}
 			si.setItem(11, halo);
+		}
+		
+		ItemStack more = new ItemStack(Material.SIGN);
+		{
+			ItemMeta meta = more.getItemMeta();
+			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "More..");
+			ArrayList<String> lore = new ArrayList<>();
+			lore.add(ChatColor.GRAY + "(More coming next update)");
+			meta.setLore(lore);
+			more.setItemMeta(meta);
+			si.setItem(31, more);
+		}
+		
+		ItemStack fword = new ItemStack(Material.BOOK);
+		{
+			ItemMeta meta = fword.getItemMeta();
+			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "First letters" + ChatColor.RESET + "" + ChatColor.GRAY + " - Game Mechanic");
+			ArrayList<String> lore = new ArrayList<>();
+			lore.add(ChatColor.GRAY + "(Work in progress)");
+			lore.add(" ");
+			lore.add(ChatColor.WHITE + "Cost: " + ChatColor.GRAY + "20 " + ChatColor.YELLOW + "MegaCoins");
+			lore.add(ChatColor.WHITE + "Desc: " + ChatColor.GRAY + "A " + ChatColor.RED + "one time use " + ChatColor.GRAY + "ability that will provide");
+			//lore.add(ChatColor.GRAY + "A " + ChatColor.RED + "one time use " + ChatColor.GRAY + "ability that will provide");
+			lore.add(ChatColor.GRAY + "          you the first letters of the words for");
+			lore.add(ChatColor.GRAY + "          an entire game.");
+			meta.setLore(lore);
+			fword.setItemMeta(meta);
+			si.setItem(19, fword);
 		}
 
 		ItemStack back = new ItemStack(Material.BEDROCK);
@@ -109,6 +137,17 @@ public class StoreItems {
 			meta.setLore(lore);
 			back.setItemMeta(meta);
 			si.setItem(34, back);
+		}
+		
+		ItemStack balance = new ItemStack(Material.DOUBLE_PLANT, 1, (short) 0);
+		{
+			ItemMeta meta = balance.getItemMeta();
+			meta.setDisplayName(ChatColor.YELLOW + "MegaCoins: " + ChatColor.GRAY + MegaData.getCoins(p.getName()));
+			ArrayList<String> lore = new ArrayList<>();
+			lore.clear();
+			meta.setLore(lore);
+			balance.setItemMeta(meta);
+			si.setItem(28, balance);
 		}
 
 		ItemStack blank = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);

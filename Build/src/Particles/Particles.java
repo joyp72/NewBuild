@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import com.likeapig.build.Build;
 import com.likeapig.build.arena.MegaData;
 import com.likeapig.build.arena.ParticleEffect;
+import com.likeapig.build.store.StoreItems;
 
 public class Particles {
 	
@@ -29,7 +30,7 @@ public class Particles {
 	
 	public void addPlayerEffect(Player p) {
 		if (p != null) {
-			if (MegaData.getHalo(p.getName())) {
+			if (MegaData.getHalo(p.getName()) && StoreItems.getActivatedString() == "halo") {
 				PlayerCircleEffect(p);
 			} else {
 				playerSimpleEffect(p);
@@ -39,7 +40,7 @@ public class Particles {
 	
 	public void addBuilderEffect(Player builder) {
 		if (builder != null) {
-			if (MegaData.getHalo(builder.getName())) {
+			if (MegaData.getHalo(builder.getName()) && StoreItems.getActivatedString() == "halo") {
 				BuilderCircleEffect(builder);
 			} else {
 				builderSimpleEffect(builder);
