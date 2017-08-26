@@ -71,7 +71,7 @@ public class Menus {
 		{
 			SkullMeta hmeta = (SkullMeta) head.getItemMeta();
 			hmeta.setOwner(p.getName());
-			hmeta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "    Player Stats");
+			hmeta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Player Stats");
 			ArrayList<String> lore = new ArrayList<>();
 			lore.add(" ");
 			Arena a = ArenaManager.get().getArena(p);
@@ -106,12 +106,23 @@ public class Menus {
 		ItemStack info = new ItemStack(Material.BOOK_AND_QUILL);
 		{
 			ItemMeta meta = info.getItemMeta();
-			meta.setDisplayName("    " + ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Mega" + ChatColor.AQUA + ""
+			meta.setDisplayName(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Mega" + ChatColor.AQUA + ""
 					+ ChatColor.BOLD + "Build");
 			ArrayList<String> lore = new ArrayList<>();
-			lore.add(ChatColor.GRAY + "  By like_a_pig");
+			lore.add(ChatColor.GRAY + "By like_a_pig");
 			lore.add("");
-			lore.add(ChatColor.GRAY + "instructions.txt");
+			lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "Objective: " );
+			lore.add(ChatColor.GRAY + "Once an arena has enough players,");
+			lore.add(ChatColor.GRAY + "a random player in the lobby will become");
+			lore.add(ChatColor.GRAY + "the builder who will be teleported in the");
+			lore.add(ChatColor.GRAY + "middle of the arena and the game will begin.");
+			lore.add(ChatColor.GRAY + "The builder will be given a word to build and");
+			lore.add(ChatColor.GRAY + "the rest of the players must try and guess that");
+			lore.add(ChatColor.GRAY + "word in order to gain points. The player who");
+			lore.add(ChatColor.GRAY + "guesses the word first gains 3 poionts, and any");
+			lore.add(ChatColor.GRAY + "players who guess after that will gain 1 point.");
+			lore.add(ChatColor.GRAY + "On the first time the word is guessed, the builder");
+			lore.add(ChatColor.GRAY + "gains 2 points.");
 			meta.setLore(lore);
 			info.setItemMeta(meta);
 			mi.setItem(3, info);

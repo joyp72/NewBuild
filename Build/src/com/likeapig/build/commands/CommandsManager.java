@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import com.likeapig.build.Build;
 import com.likeapig.build.arena.Menus;
-import com.likeapig.build.commands.MessageManager.MessageType;
 import com.likeapig.build.store.StoreItems;
 
 public class CommandsManager implements CommandExecutor {

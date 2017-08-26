@@ -3,6 +3,8 @@ package com.likeapig.build.store;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -13,14 +15,63 @@ import com.likeapig.build.arena.MegaData;
 import com.likeapig.build.arena.Menus;
 
 import net.md_5.bungee.api.ChatColor;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagList;
 
 public class StoreItems {
 
 	public Inventory si;
+	private static Activate activated;
+
+	public Activate getActivated() {
+		return activated;
+	}
+
+	public void setActivated(Activate a) {
+		activated = a;
+	}
+	
+	public static void setActivatedString(String s) {
+		activated.setName(s);
+	}
+
+	public static String getActivatedString() {
+		return activated.getName();
+	}
+
+	public Player getActivatedPlayer() {
+		return activated.getPlayer();
+	}
 
 	public StoreItems(Player p) {
 
+		if (activated == null) {
+			setActivated(activated = new Activate("default", p));
+		}
+
 		si = Menus.getInvStore();
+
+		ItemStack de = new ItemStack(Material.PAPER);
+		{
+			ItemMeta meta = de.getItemMeta();
+			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Default" + ChatColor.RESET + ""
+					+ ChatColor.GRAY + " - Particle Effect");
+			ArrayList<String> lore = new ArrayList<>();
+			if (getActivatedString() == "default") {
+				lore.add(ChatColor.GRAY + "(Already activated)");
+			} else {
+				lore.add(ChatColor.GRAY + "(Click to activate)");
+			}
+			lore.add("");
+			lore.add(ChatColor.WHITE + "Description: " + ChatColor.GRAY + "A dot that appears above your head");
+			meta.addItemFlags(ItemFlag.values());
+			meta.setLore(lore);
+			de.setItemMeta(meta);
+			if (getActivatedString() == "default") {
+				de.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
+			}
+			si.setItem(10, de);
+		}
 
 		ItemStack halo = new ItemStack(Material.RECORD_8);
 		{
@@ -31,8 +82,11 @@ public class StoreItems {
 			if (!MegaData.getHalo(p.getName())) {
 				lore.add(ChatColor.GRAY + "(Click to purchase)");
 			}
-			if (MegaData.getHalo(p.getName())) {
-				lore.add(ChatColor.GRAY + "(Already purchased)");
+			if (MegaData.getHalo(p.getName()) && getActivatedString() != "halo") {
+				lore.add(ChatColor.GRAY + "(Click to activate)");
+			}
+			if (MegaData.getHalo(p.getName()) && getActivatedString() == "halo") {
+				lore.add(ChatColor.GRAY + "(Already activated)");
 			}
 			lore.add(" ");
 			lore.add(ChatColor.WHITE + "Cost: " + ChatColor.GRAY + "50 " + ChatColor.YELLOW + "MegaCoins");
@@ -40,7 +94,10 @@ public class StoreItems {
 			meta.addItemFlags(ItemFlag.values());
 			meta.setLore(lore);
 			halo.setItemMeta(meta);
-			si.setItem(10, halo);
+			if (getActivatedString() == "halo") {
+				halo.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
+			}
+			si.setItem(11, halo);
 		}
 
 		ItemStack back = new ItemStack(Material.BEDROCK);
@@ -86,7 +143,5 @@ public class StoreItems {
 			si.setItem(44, blank);
 
 		}
-
 	}
-
 }

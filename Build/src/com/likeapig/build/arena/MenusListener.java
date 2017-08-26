@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import com.likeapig.build.Build;
 import com.likeapig.build.commands.MessageManager;
 import com.likeapig.build.commands.MessageManager.MessageType;
+import com.likeapig.build.store.StoreItems;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -68,6 +69,16 @@ public class MenusListener implements Listener {
 				String name = p.getName();
 				int coins = MegaData.getCoins(name);
 				
+				if (e.getCurrentItem().getType() == Material.PAPER) {
+					e.setCancelled(true);
+					if (StoreItems.getActivatedString() != "default") {
+						StoreItems.setActivatedString("default");
+						p.getOpenInventory().close();
+						new StoreItems(p);
+						p.openInventory(Menus.getInvStore());
+					}
+				}
+				
 				if (e.getCurrentItem().getType() == Material.RECORD_8) {
 					e.setCancelled(true);
 					if (coins >= 50 && !MegaData.getHalo(name)) {
@@ -78,8 +89,11 @@ public class MenusListener implements Listener {
 					if (coins < 50 && !MegaData.getHalo(name)) {
 						MessageManager.get().message(p, "You do not have enough MegaCoins to afford this item!", MessageType.BAD);
 					}
-					if (MegaData.getHalo(name)) {
-						MessageManager.get().message(p, "You already have this item activated!", MessageManager.MessageType.BAD);
+					if (MegaData.getHalo(name) && StoreItems.getActivatedString() != "halo") {
+						StoreItems.setActivatedString("halo");
+						p.getOpenInventory().close();
+						new StoreItems(p);
+						p.openInventory(Menus.getInvStore());
 					}
 				}
 				if (e.getCurrentItem().getType() == Material.BEDROCK) {
