@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Statistic.Type;
 import org.bukkit.block.Block;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -80,10 +82,25 @@ public class ArenaListener implements Listener {
 		Location l = e.getBlock().getLocation();
 		Arena a = ArenaManager.get().getArena(p);
 		if (a != null) {
+			if (e.getBlock().getType() == Material.SIGN_POST || e.getBlock().getType() == Material.WALL_SIGN) {
+				e.getBlock().setType(Material.AIR);
+				e.setCancelled(true);
+			}
 			if (Arena.isBuilder(p)) {
 				addLocation(l);
 				e.setCancelled(false);
 			} else {
+				e.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerFramePlace(HangingPlaceEvent e) {
+		Player p = e.getPlayer();
+		Arena a = ArenaManager.get().getArena(p);
+		if (a != null) {
+			if (e.getEntity() instanceof ItemFrame) {
 				e.setCancelled(true);
 			}
 		}

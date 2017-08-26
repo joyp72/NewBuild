@@ -76,9 +76,9 @@ public class Particles {
 						float angle = (float) (i * inc);
 						float x = (float) (Math.cos(angle) * radius);
 						float  z = (float) (Math.sin(angle) * radius);
-						loc.add(x, 2.2, z);
+						loc.add(x, 2.5, z);
 						displayColoredParticle(loc, "808080");
-						loc.subtract(x, 2.2, z);
+						loc.subtract(x, 2.5, z);
 					}
 				}
 			}, 0L, 0L);
@@ -99,9 +99,9 @@ public class Particles {
 						float angle = (float) (i * inc);
 						float x = (float) (Math.cos(angle) * radius);
 						float  z = (float) (Math.sin(angle) * radius);
-						loc.add(x, 2.2, z);
+						loc.add(x, 2.5, z);
 						displayColoredParticle(loc, "FFD700");
-						loc.subtract(x, 2.2, z);
+						loc.subtract(x, 2.5, z);
 					}
 				}
 			}, 0L, 0L);
