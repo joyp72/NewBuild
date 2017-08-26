@@ -46,6 +46,7 @@ public class CommandsManager implements CommandExecutor {
 		cmds.add(new AddCoins());
 		cmds.add(new Disguise());
 		cmds.add(new RemoveDisguise());
+		cmds.add(new Test());
 		gui = true;
 	}
 
@@ -59,7 +60,7 @@ public class CommandsManager implements CommandExecutor {
 		}
 		if (gui && args.length == 0) {
 			new Menus(p);
-			new StoreItems();
+			new StoreItems(p);
 			p.openInventory(Menus.getInvMain());
 		}
 		if (args.length == 0 && !gui) {

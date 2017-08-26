@@ -91,6 +91,17 @@ public class Menus {
 			head.setItemMeta(hmeta);
 			mi.setItem(1, head);
 		}
+		
+		ItemStack balance = new ItemStack(Material.DOUBLE_PLANT, 1, (short) 0);
+		{
+			ItemMeta meta = balance.getItemMeta();
+			meta.setDisplayName(ChatColor.YELLOW + "MegaCoins: " + ChatColor.GRAY + MegaData.getCoins(p.getName()));
+			ArrayList<String> lore = new ArrayList<>();
+			lore.clear();
+			meta.setLore(lore);
+			balance.setItemMeta(meta);
+			si.setItem(28, balance);
+		}
 
 		ItemStack info = new ItemStack(Material.BOOK_AND_QUILL);
 		{
@@ -110,7 +121,7 @@ public class Menus {
 		{
 			ItemMeta meta = blank.getItemMeta();
 			meta.setDisplayName(" ");
-			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+			meta.addItemFlags(ItemFlag.values());
 			blank.setItemMeta(meta);
 			mi.setItem(0, blank);
 			mi.setItem(2, blank);
@@ -199,7 +210,7 @@ public class Menus {
 			ItemStack back = new ItemStack(Material.BEDROCK);
 			{
 				ItemMeta meta = back.getItemMeta();
-				meta.setDisplayName(ChatColor.RED + "Back to Menu");
+				meta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Back to Menu");
 				ArrayList<String> lore = new ArrayList<>();
 				lore.add(ChatColor.GRAY + "Click to go back to Menu");
 				meta.setLore(lore);
@@ -213,7 +224,7 @@ public class Menus {
 				ItemStack item = new ItemStack(Material.BEDROCK);
 				{
 					ItemMeta meta = item.getItemMeta();
-					meta.setDisplayName(ChatColor.RED + "Leave");
+					meta.setDisplayName(ChatColor.RED + ""  + ChatColor.BOLD + "Leave");
 					ArrayList<String> lore = new ArrayList<>();
 					Arena a = ArenaManager.get().getArena(p);
 					if (a == null) {

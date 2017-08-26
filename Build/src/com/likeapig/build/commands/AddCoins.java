@@ -12,7 +12,7 @@ public class AddCoins extends Commands {
 
 	@Override
 	public void onCommand(final Player sender, final String[] args) {
-		Particles.Particles.get().PlayerCircleEffect(sender);
-		MessageManager.get().message(sender, "Particles spawned.");
+		MegaData.addCoins(sender.getName());
+		MessageManager.get().message(sender, "Coins added.");
 	}
 }

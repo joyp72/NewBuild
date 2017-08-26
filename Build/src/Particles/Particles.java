@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.likeapig.build.Build;
+import com.likeapig.build.arena.MegaData;
 import com.likeapig.build.arena.ParticleEffect;
 
 public class Particles {
@@ -22,8 +23,39 @@ public class Particles {
 	private int id;
 	private int id2;
 	private int id3;
+	private int id4;
 	
 	public Particles() {}
+	
+	public void addPlayerEffect(Player p) {
+		if (p != null) {
+			if (MegaData.getHalo(p.getName())) {
+				PlayerCircleEffect(p);
+			} else {
+				playerSimpleEffect(p);
+			}
+		}
+	}
+	
+	public void addBuilderEffect(Player builder) {
+		if (builder != null) {
+			if (MegaData.getHalo(builder.getName())) {
+				BuilderCircleEffect(builder);
+			} else {
+				builderSimpleEffect(builder);
+			}
+		}
+	}
+	
+	public void removePlayerEffect() {
+			Bukkit.getServer().getScheduler().cancelTask(id2);
+			Bukkit.getServer().getScheduler().cancelTask(id3);
+	}
+	
+	public void removeBuilderEffect() {
+			Bukkit.getServer().getScheduler().cancelTask(id);
+			Bukkit.getServer().getScheduler().cancelTask(id4);
+	}
 	
 	public void PlayerCircleEffect(Player player) {
 		if (player != null) {
@@ -48,6 +80,29 @@ public class Particles {
 		}
 	}
 	
+	public void BuilderCircleEffect(Player builder) {
+		if (builder != null) {
+			id4 = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
+				
+				float radius = 0.3f;
+				
+				@Override
+				public void run() {
+					Location loc = builder.getLocation().clone();
+					for (int i = 0; i < 12; i++) {
+						double inc = (2* Math.PI) / 12;
+						float angle = (float) (i * inc);
+						float x = (float) (Math.cos(angle) * radius);
+						float  z = (float) (Math.sin(angle) * radius);
+						loc.add(x, 2.2, z);
+						displayColoredParticle(loc, "FFD700");
+						loc.subtract(x, 2.2, z);
+					}
+				}
+			}, 0L, 0L);
+		}
+	}
+	
 	public void builderSimpleEffect(Player builder) {
 		if (builder != null) {
 			id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
@@ -61,10 +116,6 @@ public class Particles {
 		}
 	}
 	
-	public void builderStopSimpleEffect() {
-		Bukkit.getServer().getScheduler().cancelTask(id);
-	}
-	
 	public void playerSimpleEffect(Player player) {
 		if (player != null) {
 			id2 = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
@@ -76,10 +127,6 @@ public class Particles {
 				}
 			}, 0L, 0L);
 		}
-	}
-	
-	public void playerStopSimpleEffect() {
-		Bukkit.getServer().getScheduler().cancelTask(id2);
 	}
 	
 	//

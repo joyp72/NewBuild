@@ -17,6 +17,7 @@ public class MegaData {
 	public static String guessedcorrect;
 	public static String roundswon;
 	public static String gameswon;
+	public static String halo;
 
 	static {
 		instance = new MegaData();
@@ -32,6 +33,7 @@ public class MegaData {
 		guessedcorrect = ".guessedcorrect";
 		roundswon = ".roundswon";
 		gameswon = ".gameswon";
+		halo = ".halo";
 		if (!p.getDataFolder().exists()) {
 			p.getDataFolder().mkdir();
 		}
@@ -216,6 +218,40 @@ public class MegaData {
 
 	public static boolean containsGWPlayer(String name) {
 		return coinsConfig.contains(name + gameswon);
+	}
+	
+	//halo
+	
+	public static boolean getHalo(String name) {
+		if (!(containsHaloPlayer(name))) {
+			setHaloData(name, false);
+		}
+		
+		boolean bo = getHaloData(name);
+		return bo;
+	}
+	
+	public static void setHalo(String name, boolean b) {
+		boolean bo = getHaloData(name);
+		bo = b;
+		setHaloData(name, bo);
+	}
+	
+	public static boolean getHaloData(String path) {
+		return MegaData.coinsConfig.getBoolean(path + halo);
+	}
+	
+	public static void setHaloData(String path, Object value) {
+		MegaData.coinsConfig.set(path + halo, value);
+		try {
+			MegaData.coinsConfig.save(coinsFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static boolean containsHaloPlayer(String name) {
+		return coinsConfig.contains(name + halo);
 	}
 
 }

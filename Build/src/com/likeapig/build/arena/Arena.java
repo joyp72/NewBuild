@@ -125,7 +125,7 @@ public class Arena {
 			datas.add(d);
 			d.resetPlayer();
 			p.teleport(lobby);
-			Particles.get().playerSimpleEffect(p);
+			Particles.get().addPlayerEffect(p);
 			addScoreBar(p);
 			message(ChatColor.GREEN + p.getName() + " joined the arena!");
 			if (state.equals(ArenaState.WAITING) && getNumberOfPlayer() == minPlayers) {
@@ -141,9 +141,9 @@ public class Arena {
 			Data d = getData(p);
 			d.restore();
 			removeScoreBar(p);
-			Particles.get().playerStopSimpleEffect();
+			Particles.get().removePlayerEffect();
 			if (p == builder) {
-				Particles.get().builderStopSimpleEffect();
+				Particles.get().removeBuilderEffect();
 				DisguiseClass.disguise(p, p.getName());
 				;
 			}
@@ -179,8 +179,8 @@ public class Arena {
 		Timer.get().stopTasks(this);
 		countdown = 0;
 		message(ChatColor.YELLOW + "The word was " + word + ".");
-		Particles.get().builderStopSimpleEffect();
-		Particles.get().playerStopSimpleEffect();
+		Particles.get().removeBuilderEffect();
+		Particles.get().removePlayerEffect();
 		for (Player p : getPlayers()) {
 			DisguiseClass.disguise(p, p.getName());
 			;
@@ -222,8 +222,8 @@ public class Arena {
 
 	private void teleportBuilderToSpawn() {
 		if (builder != null) {
-			Particles.get().builderSimpleEffect(builder);
-			Particles.get().playerStopSimpleEffect();
+			Particles.get().addBuilderEffect(builder);
+			Particles.get().removePlayerEffect();
 			DisguiseClass.disguise(builder, "bobthebuiler");
 			builder.teleport(spawn);
 		}
@@ -233,7 +233,7 @@ public class Arena {
 		for (Player p : getPlayers()) {
 			if (p != builder) {
 				p.teleport(lobby);
-				Particles.get().playerSimpleEffect(p);
+				Particles.get().addPlayerEffect(p);
 			}
 		}
 	}
@@ -431,7 +431,12 @@ public class Arena {
 				MessageManager.get().message(winners.get(0).getPlayer(),
 						ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
 			}
-			stop();
+			firework(getSpawn());
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
+				public void run() {
+					stop();
+				}
+			}, 60L);
 			ArenaListener.get().removeBlocks();
 			return;
 		}
@@ -468,7 +473,6 @@ public class Arena {
 
 	public void stop() {
 		Timer.get().stopTasks(this);
-		firework(getSpawn());
 		setState(ArenaState.WAITING);
 		kickAll(true);
 	}

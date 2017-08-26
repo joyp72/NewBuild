@@ -32,6 +32,7 @@ public class MenusListener implements Listener {
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
 
+		// Main Menu
 		if (e.getInventory().getName().equalsIgnoreCase(Menus.getInvMain().getName())) {
 			if (e.getCurrentItem() == null) {
 				return;
@@ -43,18 +44,58 @@ public class MenusListener implements Listener {
 					p.openInventory(Menus.getInvArenas());
 				}
 			}
-			if (e.getCurrentItem().getType() == Material.SKULL_ITEM || e.getCurrentItem().getType() == Material.BOOK_AND_QUILL || e.getCurrentItem().getType() == Material.STAINED_GLASS_PANE) {
+			if (e.getCurrentItem().getType() == Material.SKULL_ITEM
+					|| e.getCurrentItem().getType() == Material.BOOK_AND_QUILL
+					|| e.getCurrentItem().getType() == Material.STAINED_GLASS_PANE) {
 				e.setCancelled(true);
 			}
-			
+
 			if (e.getCurrentItem().getType() == Material.CHEST) {
 				e.setCancelled(true);
 				Player p = (Player) e.getWhoClicked();
 				p.openInventory(Menus.getInvStore());
-				
+
 			}
 		}
 
+		// Store
+		if (e.getInventory().getName().equalsIgnoreCase(Menus.getInvStore().getName())) {
+			if (e.getCurrentItem() == null) {
+				return;
+			}
+			if (e.getWhoClicked() instanceof Player) {
+				Player p = (Player) e.getWhoClicked();
+				String name = p.getName();
+				int coins = MegaData.getCoins(name);
+				
+				if (e.getCurrentItem().getType() == Material.RECORD_8) {
+					e.setCancelled(true);
+					if (coins >= 50 && !MegaData.getHalo(name)) {
+						MegaData.setHalo(name, true);
+						MegaData.setCoins(name, coins - 50);
+						MessageManager.get().message(p, "Successfully bought Halo effect!", MessageType.GOOD);
+					}
+					if (coins < 50 && !MegaData.getHalo(name)) {
+						MessageManager.get().message(p, "You do not have enough MegaCoins to afford this item!", MessageType.BAD);
+					}
+					if (MegaData.getHalo(name)) {
+						MessageManager.get().message(p, "You already have this item activated!", MessageManager.MessageType.BAD);
+					}
+				}
+				if (e.getCurrentItem().getType() == Material.BEDROCK) {
+					e.setCancelled(true);
+					p.openInventory(Menus.getInvMain());
+				}
+				if (e.getCurrentItem().getType() == Material.DOUBLE_PLANT) {
+					e.setCancelled(true);
+				}
+				if (e.getCurrentItem().getType() == Material.STAINED_GLASS_PANE) {
+					e.setCancelled(true);
+				}
+			}
+		}
+
+		// Arenas
 		if (e.getInventory().getName().equalsIgnoreCase(Menus.getInvArenas().getName())) {
 			if (e.getCurrentItem() == null) {
 				return;
@@ -114,7 +155,8 @@ public class MenusListener implements Listener {
 						}
 					}
 				}
-				if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Back to Menu")) {
+				if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())
+						.equalsIgnoreCase("Back to Menu")) {
 					String dName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
 					if (dName.equalsIgnoreCase("back to menu")) {
 						if (e.getWhoClicked() instanceof Player) {
