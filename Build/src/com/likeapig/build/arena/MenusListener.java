@@ -46,6 +46,13 @@ public class MenusListener implements Listener {
 			if (e.getCurrentItem().getType() == Material.SKULL_ITEM || e.getCurrentItem().getType() == Material.BOOK_AND_QUILL || e.getCurrentItem().getType() == Material.STAINED_GLASS_PANE) {
 				e.setCancelled(true);
 			}
+			
+			if (e.getCurrentItem().getType() == Material.CHEST) {
+				e.setCancelled(true);
+				Player p = (Player) e.getWhoClicked();
+				p.openInventory(Menus.getInvStore());
+				
+			}
 		}
 
 		if (e.getInventory().getName().equalsIgnoreCase(Menus.getInvArenas().getName())) {

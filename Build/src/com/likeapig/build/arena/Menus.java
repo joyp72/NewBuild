@@ -2,7 +2,6 @@ package com.likeapig.build.arena;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import com.likeapig.build.Build;
 import com.likeapig.build.arena.Arena.ArenaState;
 
 import net.md_5.bungee.api.ChatColor;
@@ -21,11 +19,12 @@ public class Menus {
 
 	private static Inventory ai;
 	private static Inventory mi;
+	private static Inventory si;
 	private int size = 9;
 	private int slot = 0;
-	private int i = 1;
 	private String bm = sendCenteredMessage("Arenas");
 	private String mm = sendCenteredMessage("Main Menu");
+	private String sm = sendCenteredMessage("Store");
 
 	public static Inventory getInvArenas() {
 		return ai;
@@ -34,12 +33,17 @@ public class Menus {
 	public static Inventory getInvMain() {
 		return mi;
 	}
+	
+	public static Inventory getInvStore() {
+		return si;
+	}
 
 	private final static int CENTER_PX = 34 * 3;
 
 	public Menus(Player p) {
 		ai = Bukkit.createInventory(p, size, bm);
 		mi = Bukkit.createInventory(p, size, mm);
+		si = Bukkit.createInventory(p, 45, sm);
 
 		ItemStack arenas = new ItemStack(Material.WORKBENCH);
 		{
@@ -49,7 +53,18 @@ public class Menus {
 			lore.add(ChatColor.GRAY + "Click to view arenas");
 			meta.setLore(lore);
 			arenas.setItemMeta(meta);
-			mi.setItem(6, arenas);
+			mi.setItem(7, arenas);
+		}
+		
+		ItemStack store = new ItemStack(Material.CHEST);
+		{
+			ItemMeta meta = store.getItemMeta();
+			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Store");
+			ArrayList<String> lore = new ArrayList<>();
+			lore.add(ChatColor.GRAY + "Click to open store");
+			meta.setLore(lore);
+			store.setItemMeta(meta);
+			mi.setItem(5, store);
 		}
 
 		ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
@@ -74,7 +89,7 @@ public class Menus {
 			lore.add(ChatColor.YELLOW + "MegaCoins: " + ChatColor.GRAY + MegaData.getCoins(p.getName()));
 			hmeta.setLore(lore);
 			head.setItemMeta(hmeta);
-			mi.setItem(2, head);
+			mi.setItem(1, head);
 		}
 
 		ItemStack info = new ItemStack(Material.BOOK_AND_QUILL);
@@ -88,7 +103,7 @@ public class Menus {
 			lore.add(ChatColor.GRAY + "instructions.txt");
 			meta.setLore(lore);
 			info.setItemMeta(meta);
-			mi.setItem(4, info);
+			mi.setItem(3, info);
 		}
 
 		ItemStack blank = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
@@ -98,10 +113,9 @@ public class Menus {
 			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 			blank.setItemMeta(meta);
 			mi.setItem(0, blank);
-			mi.setItem(1, blank);
-			mi.setItem(3, blank);
-			mi.setItem(5, blank);
-			mi.setItem(7, blank);
+			mi.setItem(2, blank);
+			mi.setItem(4, blank);
+			mi.setItem(6, blank);
 			mi.setItem(8, blank);
 
 		}

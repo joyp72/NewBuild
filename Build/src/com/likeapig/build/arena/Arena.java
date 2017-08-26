@@ -451,7 +451,7 @@ public class Arena {
 		ArenaListener.get().removeBlocks();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
 			public void run() {
-				Timer.get().createTimer(getArena(), "endround", 60).startTimer(getArena(), "endround");
+				Timer.get().createTimer(getArena(), "endround", 120).startTimer(getArena(), "endround");
 			}
 		}, 20L);
 	}
