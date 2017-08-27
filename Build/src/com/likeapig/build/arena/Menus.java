@@ -20,11 +20,32 @@ public class Menus {
 	private static Inventory ai;
 	private static Inventory mi;
 	private static Inventory si;
+	private static Inventory mz;
+	private static Inventory mz1;
+	private static Inventory mz2;
+	private static Inventory mz3;
+	private static Inventory mz4;
+	private static Inventory mz5;
+	private static Inventory mz6;
+	private static Inventory mz7;
+	private static Inventory mz8;
+	private static Inventory mz9;
+	private static Inventory mz10;
+	private static Inventory mzend;
 	private int size = 9;
 	private int slot = 0;
 	private String bm = sendCenteredMessage("Arenas");
 	private String mm = sendCenteredMessage("Main Menu");
 	private String sm = sendCenteredMessage("Store");
+	private String up = sendCenteredMessage("Up");
+	private String down = sendCenteredMessage("Down");
+	private String left = sendCenteredMessage("Left");
+	private String right = sendCenteredMessage("Right");
+	private String sameasbefore = sendCenteredMessage("Same as before");
+	private String sameastwobefore = sendCenteredMessage("Same as two before");
+	private String sameasthebeginning = sendCenteredMessage("Sameasthebeginning");
+	private String sameasthreebefore = sendCenteredMessage("Same as three before");
+	private String mazeend = "End of the maze";
 
 	public static Inventory getInvArenas() {
 		return ai;
@@ -44,6 +65,19 @@ public class Menus {
 		ai = Bukkit.createInventory(p, size, bm);
 		mi = Bukkit.createInventory(p, size, mm);
 		si = Bukkit.createInventory(p, 45, sm);
+		mz = Bukkit.createInventory(p, size, up);
+		mz1 = Bukkit.createInventory(p, size, left);
+		mz2 = Bukkit.createInventory(p, size, down);
+		mz3 = Bukkit.createInventory(p, size, down);
+		mz4 = Bukkit.createInventory(p, size, sameastwobefore);
+		mz5 = Bukkit.createInventory(p, size, sameasthebeginning);
+		mz6 = Bukkit.createInventory(p, size, sameastwobefore);
+		mz7 = Bukkit.createInventory(p, size, left);
+		mz8 = Bukkit.createInventory(p, size, right);
+		mz9 = Bukkit.createInventory(p, size, sameasbefore);
+		mz10 = Bukkit.createInventory(p, size, sameasthreebefore);
+		mzend = Bukkit.createInventory(p, size, mazeend);
+		
 
 		ItemStack arenas = new ItemStack(Material.WORKBENCH);
 		{
@@ -239,6 +273,54 @@ public class Menus {
 			}
 		}
 
+	}
+	
+	public static Inventory getMaze() {
+		return mz;
+	}
+	
+	public static Inventory getMaze1() {
+		return mz1;
+	}
+	
+	public static Inventory getMaze2() {
+		return mz2;
+	}
+	
+	public static Inventory getMaze3() {
+		return mz3;
+	}
+	
+	public static Inventory getMaze4() {
+		return mz4;
+	}
+	
+	public static Inventory getMaze5() {
+		return mz5;
+	}
+	
+	public static Inventory getMaze6() {
+		return mz6;
+	}
+	
+	public static Inventory getMaze7() {
+		return mz7;
+	}
+	
+	public static Inventory getMaze8() {
+		return mz8;
+	}
+	
+	public static Inventory getMaze9() {
+		return mz9;
+	}
+	
+	public static Inventory getMaze10() {
+		return mz10;
+	}
+	
+	public static Inventory getMazeEnd() {
+		return mzend;
 	}
 
 	public static String sendCenteredMessage(String message) {
