@@ -1,9 +1,9 @@
 package com.likeapig.build.store;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -15,38 +15,38 @@ import com.likeapig.build.arena.MegaData;
 import com.likeapig.build.arena.Menus;
 
 import net.md_5.bungee.api.ChatColor;
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-import net.minecraft.server.v1_12_R1.NBTTagList;
 
 public class StoreItems {
 
 	public Inventory si;
-	private static Activate activated;
+	// private static Activate activated;
 
-	public Activate getActivated() {
-		return activated;
-	}
+	public static HashMap<Player, Activate> active = new HashMap<Player, Activate>();
 
-	public void setActivated(Activate a) {
-		activated = a;
-	}
-	
-	public static void setActivatedString(String s) {
-		activated.setName(s);
-	}
+	// public Activate getActivated() {
+	// return activated;
+	// }
 
-	public static String getActivatedString() {
-		return activated.getName();
+	// public void setActivated(Activate a) {
+	// activated = a;
+	// }
+
+	public static void setActivatedString(Player p, String s) {
+		active.get(p).setName(s);
 	}
 
-	public Player getActivatedPlayer() {
-		return activated.getPlayer();
+	public static String getActivatedString(Player p) {
+		return active.get(p).getName();
 	}
+
+	// public Player getActivatedPlayer() {
+	// return activated.getPlayer();
+	// }
 
 	public StoreItems(Player p) {
 
-		if (activated == null) {
-			setActivated(new Activate("default", p));
+		if (active.get(p) == null) {
+			active.put(p, new Activate("default", p));
 		}
 
 		si = Menus.getInvStore();
@@ -57,7 +57,7 @@ public class StoreItems {
 			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Default" + ChatColor.RESET + ""
 					+ ChatColor.GRAY + " - Particle Effect");
 			ArrayList<String> lore = new ArrayList<>();
-			if (getActivatedString() == "default") {
+			if (active.get(p).getName() == "default") {
 				lore.add(ChatColor.GRAY + "(Already activated)");
 			} else {
 				lore.add(ChatColor.GRAY + "(Click to activate)");
@@ -67,7 +67,7 @@ public class StoreItems {
 			meta.addItemFlags(ItemFlag.values());
 			meta.setLore(lore);
 			de.setItemMeta(meta);
-			if (getActivatedString() == "default") {
+			if (active.get(p).getName() == "default") {
 				de.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
 			}
 			si.setItem(10, de);
@@ -82,10 +82,10 @@ public class StoreItems {
 			if (!MegaData.getHalo(p.getName())) {
 				lore.add(ChatColor.GRAY + "(Click to purchase)");
 			}
-			if (MegaData.getHalo(p.getName()) && getActivatedString() != "halo") {
+			if (MegaData.getHalo(p.getName()) && active.get(p).getName() != "halo") {
 				lore.add(ChatColor.GRAY + "(Click to activate)");
 			}
-			if (MegaData.getHalo(p.getName()) && getActivatedString() == "halo") {
+			if (MegaData.getHalo(p.getName()) && active.get(p).getName() == "halo") {
 				lore.add(ChatColor.GRAY + "(Already activated)");
 			}
 			lore.add(" ");
@@ -94,12 +94,12 @@ public class StoreItems {
 			meta.addItemFlags(ItemFlag.values());
 			meta.setLore(lore);
 			halo.setItemMeta(meta);
-			if (getActivatedString() == "halo") {
+			if (MegaData.getHalo(p.getName()) && active.get(p).getName() == "halo") {
 				halo.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
 			}
 			si.setItem(11, halo);
 		}
-		
+
 		ItemStack more = new ItemStack(Material.SIGN);
 		{
 			ItemMeta meta = more.getItemMeta();
@@ -110,17 +110,20 @@ public class StoreItems {
 			more.setItemMeta(meta);
 			si.setItem(31, more);
 		}
-		
+
 		ItemStack fword = new ItemStack(Material.BOOK);
 		{
 			ItemMeta meta = fword.getItemMeta();
-			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "First letters" + ChatColor.RESET + "" + ChatColor.GRAY + " - Game Mechanic");
+			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "First letters" + ChatColor.RESET + ""
+					+ ChatColor.GRAY + " - Game Mechanic");
 			ArrayList<String> lore = new ArrayList<>();
 			lore.add(ChatColor.GRAY + "(Work in progress)");
 			lore.add(" ");
 			lore.add(ChatColor.WHITE + "Cost: " + ChatColor.GRAY + "20 " + ChatColor.YELLOW + "MegaCoins");
-			lore.add(ChatColor.WHITE + "Desc: " + ChatColor.GRAY + "A " + ChatColor.RED + "one time use " + ChatColor.GRAY + "ability that will provide");
-			//lore.add(ChatColor.GRAY + "A " + ChatColor.RED + "one time use " + ChatColor.GRAY + "ability that will provide");
+			lore.add(ChatColor.WHITE + "Desc: " + ChatColor.GRAY + "A " + ChatColor.RED + "one time use "
+					+ ChatColor.GRAY + "ability that will provide");
+			// lore.add(ChatColor.GRAY + "A " + ChatColor.RED + "one time use " +
+			// ChatColor.GRAY + "ability that will provide");
 			lore.add(ChatColor.GRAY + "          you the first letters of the words for");
 			lore.add(ChatColor.GRAY + "          an entire game.");
 			meta.setLore(lore);
@@ -138,7 +141,7 @@ public class StoreItems {
 			back.setItemMeta(meta);
 			si.setItem(34, back);
 		}
-		
+
 		ItemStack balance = new ItemStack(Material.DOUBLE_PLANT, 1, (short) 0);
 		{
 			ItemMeta meta = balance.getItemMeta();

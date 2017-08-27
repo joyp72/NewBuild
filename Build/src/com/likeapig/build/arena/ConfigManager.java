@@ -60,7 +60,7 @@ public class ConfigManager
                 this.add("Church");
                 this.add("Balloon");
                 this.add("Vacuum");
-                this.add("Bread");
+                this.add("Bike");
                 this.add("Boat");
                 this.add("Dog");
                 this.add("Earth");

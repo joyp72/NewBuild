@@ -27,7 +27,6 @@ public class Skin {
 	
 	private void load(){
 		try {
-			// Get the name from SwordPVP
 			URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
 			URLConnection uc = url.openConnection();
 			uc.setUseCaches(false);
@@ -59,7 +58,6 @@ public class Skin {
 				}
 			}
 		} catch (Exception e) {
-			; // Failed to load skin
 		}
 	}
 	

@@ -54,8 +54,13 @@ public class MenusListener implements Listener {
 			if (e.getCurrentItem().getType() == Material.CHEST) {
 				e.setCancelled(true);
 				Player p = (Player) e.getWhoClicked();
-				p.openInventory(Menus.getInvStore());
-
+				new Menus(p);
+				new StoreItems(p);
+				Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
+					public void run() {
+						p.openInventory(Menus.getInvStore());
+					}
+				}, 1L);
 			}
 		}
 
@@ -68,17 +73,17 @@ public class MenusListener implements Listener {
 				Player p = (Player) e.getWhoClicked();
 				String name = p.getName();
 				int coins = MegaData.getCoins(name);
-				
+
 				if (e.getCurrentItem().getType() == Material.PAPER) {
 					e.setCancelled(true);
-					if (StoreItems.getActivatedString() != "default") {
-						StoreItems.setActivatedString("default");
+					if (StoreItems.getActivatedString(p) != "default") {
+						StoreItems.setActivatedString(p, "default");
 						p.getOpenInventory().close();
 						new StoreItems(p);
 						p.openInventory(Menus.getInvStore());
 					}
 				}
-				
+
 				if (e.getCurrentItem().getType() == Material.RECORD_8) {
 					e.setCancelled(true);
 					if (coins >= 50 && !MegaData.getHalo(name)) {
@@ -87,10 +92,11 @@ public class MenusListener implements Listener {
 						MessageManager.get().message(p, "Successfully bought Halo effect!", MessageType.GOOD);
 					}
 					if (coins < 50 && !MegaData.getHalo(name)) {
-						MessageManager.get().message(p, "You do not have enough MegaCoins to afford this item!", MessageType.BAD);
+						MessageManager.get().message(p, "You do not have enough MegaCoins to afford this item!",
+								MessageType.BAD);
 					}
-					if (MegaData.getHalo(name) && StoreItems.getActivatedString() != "halo") {
-						StoreItems.setActivatedString("halo");
+					if (MegaData.getHalo(name) && StoreItems.getActivatedString(p) != "halo") {
+						StoreItems.setActivatedString(p, "halo");
 						p.getOpenInventory().close();
 						new StoreItems(p);
 						p.openInventory(Menus.getInvStore());
@@ -98,9 +104,18 @@ public class MenusListener implements Listener {
 				}
 				if (e.getCurrentItem().getType() == Material.BEDROCK) {
 					e.setCancelled(true);
-					p.openInventory(Menus.getInvMain());
+					new Menus(p);
+					new StoreItems(p);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
+						public void run() {
+							p.openInventory(Menus.getInvMain());
+						}
+					}, 1L);
 				}
-				if (e.getCurrentItem().getType() == Material.STAINED_GLASS_PANE || e.getCurrentItem().getType() == Material.BOOK || e.getCurrentItem().getType() == Material.DOUBLE_PLANT || e.getCurrentItem().getType() == Material.SIGN) {
+				if (e.getCurrentItem().getType() == Material.STAINED_GLASS_PANE
+						|| e.getCurrentItem().getType() == Material.BOOK
+						|| e.getCurrentItem().getType() == Material.DOUBLE_PLANT
+						|| e.getCurrentItem().getType() == Material.SIGN) {
 					e.setCancelled(true);
 				}
 			}

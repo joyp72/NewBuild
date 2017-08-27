@@ -1,7 +1,9 @@
 package com.likeapig.build.arena;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -34,17 +36,17 @@ public class Menus {
 	private static Inventory mzend;
 	private int size = 9;
 	private int slot = 0;
-	private String bm = sendCenteredMessage("Arenas");
-	private String mm = sendCenteredMessage("Main Menu");
-	private String sm = sendCenteredMessage("Store");
-	private String up = sendCenteredMessage("Up");
-	private String down = sendCenteredMessage("Down");
-	private String left = sendCenteredMessage("Left");
-	private String right = sendCenteredMessage("Right");
-	private String sameasbefore = sendCenteredMessage("Same as before");
-	private String sameastwobefore = sendCenteredMessage("Same as two before");
-	private String sameasthebeginning = sendCenteredMessage("Sameasthebeginning");
-	private String sameasthreebefore = sendCenteredMessage("Same as three before");
+	private String bm = "Arenas";
+	private String mm = "Main Menu";
+	private String sm = "Store";
+	private String up = "Up";
+	private String down = "Down";
+	private String left = "Left";
+	private String right = "Right";
+	private String sameasbefore = "Same as before";
+	private String sameastwobefore = "Same as two before";
+	private String sameasthebeginning = "Sameasthebeginning";
+	private String sameasthreebefore = "Same as three before";
 	private String mazeend = "End of the maze";
 
 	public static Inventory getInvArenas() {
@@ -85,6 +87,7 @@ public class Menus {
 			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD +  "Arenas");
 			ArrayList<String> lore = new ArrayList<>();
 			lore.add(ChatColor.GRAY + "Click to view arenas");
+			lore.add(" ");
 			meta.setLore(lore);
 			arenas.setItemMeta(meta);
 			mi.setItem(7, arenas);
@@ -134,18 +137,32 @@ public class Menus {
 			ArrayList<String> lore = new ArrayList<>();
 			lore.add(ChatColor.GRAY + "By like_a_pig");
 			lore.add("");
-			lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "Objective: " );
-			lore.add(ChatColor.GRAY + "Once an arena has enough players,");
-			lore.add(ChatColor.GRAY + "a random player in the lobby will become");
-			lore.add(ChatColor.GRAY + "the builder who will be teleported in the");
-			lore.add(ChatColor.GRAY + "middle of the arena and the game will begin.");
-			lore.add(ChatColor.GRAY + "The builder will be given a word to build and");
-			lore.add(ChatColor.GRAY + "the rest of the players must try and guess that");
-			lore.add(ChatColor.GRAY + "word in order to gain points. The player who");
-			lore.add(ChatColor.GRAY + "guesses the word first gains 3 poionts, and any");
-			lore.add(ChatColor.GRAY + "players who guess after that will gain 1 point.");
-			lore.add(ChatColor.GRAY + "On the first time the word is guessed, the builder");
-			lore.add(ChatColor.GRAY + "gains 2 points.");
+			lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "Overview: " );
+			//lore.add(ChatColor.GRAY + "Once an arena has enough players,");
+			//lore.add(ChatColor.GRAY + "a random player in the lobby will become");
+			//lore.add(ChatColor.GRAY + "the builder who will be teleported in the");
+			//lore.add(ChatColor.GRAY + "middle of the arena and the game will begin.");
+			//lore.add(ChatColor.GRAY + "The builder will be given a word to build and");
+			//lore.add(ChatColor.GRAY + "the rest of the players must try and guess that");
+			//lore.add(ChatColor.GRAY + "word in order to gain points. The player who");
+			//lore.add(ChatColor.GRAY + "guesses the word first gains 3 poionts, and any");
+			//lore.add(ChatColor.GRAY + "players who guess after that will gain 1 point.");
+			//lore.add(ChatColor.GRAY + "On the first time the word is guessed, the builder");
+			//lore.add(ChatColor.GRAY + "gains 2 points.");
+			String[] l = formatLore("Once an arena has enough players, a random player in the lobby will become the builder who will be teleported in the middle of the arena and the game will begin. The builder will be given a word to build and the rest of the players must try and guess that word in order to gain points. The player who guesses the word first gains 3 points, and any players who guess after that will gain 1 point. On the first time the word is guessed, the builder gains 2 points.", 30, org.bukkit.ChatColor.GRAY);
+			lore.add(l[0]);
+			lore.add(l[1]);
+			lore.add(l[2]);
+			lore.add(l[3]);
+			lore.add(l[4]);
+			lore.add(l[5]);
+			lore.add(l[6]);
+			lore.add(l[7]);
+			lore.add(l[8]);
+			lore.add(l[9]);
+			lore.add(l[10]);
+			lore.add(l[11]);
+			lore.add(l[12]);
 			meta.setLore(lore);
 			info.setItemMeta(meta);
 			mi.setItem(3, info);
@@ -322,6 +339,48 @@ public class Menus {
 	public static Inventory getMazeEnd() {
 		return mzend;
 	}
+	
+	public static String[] formatLore(String text, int size, org.bukkit.ChatColor color) {
+        List<String> ret = new ArrayList<String>();
+
+        if(text == null || text.length() == 0)
+            return new String[ret.size()];
+        
+        String[] words = text.split(" ");
+        String rebuild = "";
+        
+        int lastAdded = 0;
+        for(int i = 0; i < words.length; i++)
+        {
+            int wordLen = words[i].length();
+            if(rebuild.length() + wordLen > 40 || words[i].contains("\n") || words[i].equals(Character.LINE_SEPARATOR))
+            {
+                lastAdded = i;
+                
+                ret.add(color + rebuild);
+                rebuild = "";
+                if(words[i].equalsIgnoreCase("\n")) {
+                    words[i] = "";
+                    continue;
+                }
+                    
+                
+            } 
+                rebuild = rebuild + " " + words[i];
+            
+            
+            
+        }
+        if(!rebuild.equalsIgnoreCase(""))
+            ret.add(color + rebuild);
+        
+        String[] val = new String[ret.size()];
+       for(int i = 0; i < ret.size(); i++)
+            val[i] = ret.get(i);
+            
+
+        return val;
+    }
 
 	public static String sendCenteredMessage(String message) {
 		message = ChatColor.translateAlternateColorCodes('&', message);
