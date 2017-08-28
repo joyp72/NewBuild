@@ -51,8 +51,8 @@ public class ConfigManager
                 this.add("Rainbow");
                 this.add("Seesaw");
                 this.add("Bridge");
-                this.add("Cold");
-                this.add("Helicopter");
+                this.add("Snowflake");
+                this.add("Plane");
                 this.add("Poop");
                 this.add("Heart");
                 this.add("Mario");
@@ -68,6 +68,23 @@ public class ConfigManager
                 this.add("Tree");
                 this.add("Pencil");
                 this.add("Computer");
+                this.add("Blood");
+                this.add("Tent");
+                this.add("Clock");
+                this.add("Flower");
+                this.add("Hotdog");
+                this.add("Volcano");
+                this.add("Crown");
+                this.add("Chair");
+                this.add("Shark");
+                this.add("Phone");
+                this.add("");
+                this.add("");
+                this.add("");
+                this.add("");
+                this.add("");
+                this.add("");
+                this.add("");
             }
         };
     }

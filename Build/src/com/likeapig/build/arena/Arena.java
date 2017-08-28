@@ -9,9 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -28,7 +25,6 @@ import com.likeapig.build.commands.MessageManager.MessageType;
 import com.likeapig.build.utils.LocationUtils;
 
 import Particles.Particles;
-import net.minecraft.server.v1_12_R1.EntityPlayer;
 
 public class Arena {
 
@@ -36,7 +32,6 @@ public class Arena {
 	private Location lobby;
 	private String name;
 	private static boolean wordsSetup;
-	private static List<String> words;
 	private static Player builder;
 	private int minPlayers;
 	private int maxPlayers;
@@ -46,9 +41,13 @@ public class Arena {
 	private ArenaState state;
 	private int countdown;
 	private BossBar b;
+	public List<String> usedWords = new ArrayList<String>();
+	public static boolean uWordsSetup;
 
 	static {
 		wordsSetup = false;
+		uWordsSetup = false;
+
 	}
 
 	public Arena(String name, Location location) {
@@ -63,11 +62,6 @@ public class Arena {
 		loadFromConfig();
 		saveToConfig();
 		checkState();
-		if (!Arena.wordsSetup) {
-			Arena.words = ConfigManager.WORDS;
-			Arena.wordsSetup = true;
-		}
-
 	}
 
 	public void setLobby(Location l) {
@@ -180,6 +174,7 @@ public class Arena {
 		message(ChatColor.YELLOW + "The word was " + word + ".");
 		Particles.get().removeBuilderEffect();
 		Particles.get().removePlayerEffect();
+		usedWords.remove(word);
 		for (Player p : getPlayers()) {
 			// DisguiseClass.disguise(p, p.getName());
 		}
@@ -242,7 +237,7 @@ public class Arena {
 
 	private void getNewWord() {
 		Random r = new Random();
-		word = words.get(r.nextInt(words.size())).toLowerCase();
+		word = usedWords.get(r.nextInt(usedWords.size())).toLowerCase();
 	}
 
 	public void setMinPlayers(int i) {
@@ -476,6 +471,7 @@ public class Arena {
 		if (this != null) {
 			Timer.get().stopTasks(this);
 		}
+		usedWords.clear();
 		setState(ArenaState.WAITING);
 		Particles.get().removeAllEffect();
 		kickAll(true);
@@ -546,6 +542,7 @@ public class Arena {
 				MegaData.addRW(d.getPlayer().getName(), 1);
 			}
 		}
+		usedWords.addAll(ConfigManager.WORDS);
 		Arena.builder = null;
 		Particles.get().removeAllEffect();
 		Timer.get().stopTasks(this);
