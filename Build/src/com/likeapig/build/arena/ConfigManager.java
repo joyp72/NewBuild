@@ -78,13 +78,6 @@ public class ConfigManager
                 this.add("Chair");
                 this.add("Shark");
                 this.add("Phone");
-                this.add("");
-                this.add("");
-                this.add("");
-                this.add("");
-                this.add("");
-                this.add("");
-                this.add("");
             }
         };
     }

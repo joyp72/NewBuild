@@ -31,7 +31,6 @@ public class Arena {
 	private Location spawn;
 	private Location lobby;
 	private String name;
-	private static boolean wordsSetup;
 	private static Player builder;
 	private int minPlayers;
 	private int maxPlayers;
@@ -41,14 +40,7 @@ public class Arena {
 	private ArenaState state;
 	private int countdown;
 	private BossBar b;
-	public List<String> usedWords = new ArrayList<String>();
-	public static boolean uWordsSetup;
-
-	static {
-		wordsSetup = false;
-		uWordsSetup = false;
-
-	}
+	public static List<String> usedWords = new ArrayList<String>();
 
 	public Arena(String name, Location location) {
 		state = ArenaState.STOPPED;
@@ -237,7 +229,7 @@ public class Arena {
 
 	private void getNewWord() {
 		Random r = new Random();
-		word = usedWords.get(r.nextInt(usedWords.size())).toLowerCase();
+		word = usedWords.get(r.nextInt(usedWords.size()));
 	}
 
 	public void setMinPlayers(int i) {
