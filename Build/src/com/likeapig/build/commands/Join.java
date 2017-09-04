@@ -31,6 +31,7 @@ public class Join extends Commands {
         }
         if (a2.getLobby() == null) {
         	MessageManager.get().message(sender, a2.getName() + " doesn't have a lobby set!", MessageType.BAD);
+        	return;
         }
         a2.addPlayer(sender);
     }
