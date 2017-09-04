@@ -288,6 +288,10 @@ public class Arena {
 			endRound();
 		}
 	}
+	
+	public String getWord() {
+		return word;
+	}
 
 	public void handleChat(AsyncPlayerChatEvent e) {
 		String s = e.getMessage().toLowerCase();
@@ -304,7 +308,7 @@ public class Arena {
 				e.setCancelled(true);
 				return;
 			}
-			if (s.contains(word)) {
+			if (s.contains(word.toLowerCase())) {
 				e.setCancelled(true);
 				onWordGuessed(d);
 			} else {
@@ -312,32 +316,6 @@ public class Arena {
 			}
 		} else {
 			e.setMessage(ChatColor.GRAY + s);
-		}
-	}
-
-	public void handleBubbleChat(PlayerChatEvent e) {
-		String s = e.getMessage().toLowerCase();
-		Player p = e.getPlayer();
-		if (isStarted()) {
-			if (p.equals(builder)) {
-				e.setCancelled(true);
-				return;
-			}
-			Data d = getData(p);
-			if (d.guessedWord()) {
-				e.setCancelled(true);
-				return;
-			}
-			if (s.contains(word)) {
-				e.setCancelled(true);
-				return;
-			} else {
-				Bubble bubble = new Bubble(p.getLocation(), s);
-				bubble.setCancelTask(Bukkit.getScheduler().runTaskTimer(Build.getInstance(), bubble, 0L, 2L));
-			}
-		} else {
-			Bubble bubble = new Bubble(p.getLocation(), s);
-			bubble.setCancelTask(Bukkit.getScheduler().runTaskTimer(Build.getInstance(), bubble, 0L, 2L));
 		}
 	}
 

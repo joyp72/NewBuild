@@ -126,14 +126,6 @@ public class ArenaListener implements Listener {
 			a.handleChat(e);
 		}
 	}
-	
-	@EventHandler
-	public void onPlayerBubbleChat(final PlayerChatEvent e) {
-		final Arena a = ArenaManager.get().getArena(e.getPlayer());
-		if (a != null) {
-			a.handleBubbleChat(e);
-		}
-	}
 
 	@EventHandler
 	public void onPlayerDropItem(final PlayerDropItemEvent e) {
