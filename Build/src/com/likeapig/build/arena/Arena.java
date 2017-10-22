@@ -14,17 +14,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 
-import com.likeapig.bubble.Bubble;
 import com.likeapig.build.Build;
 import com.likeapig.build.Settings;
 import com.likeapig.build.commands.MessageManager;
 import com.likeapig.build.commands.MessageManager.MessageType;
 import com.likeapig.build.utils.LocationUtils;
-
-import Particles.Particles;
 
 public class Arena {
 
@@ -110,7 +106,7 @@ public class Arena {
 			datas.add(d);
 			d.resetPlayer();
 			p.teleport(lobby);
-			Particles.get().addPlayerEffect(p);
+			// Particles.get().addPlayerEffect(p);
 			new ScoreBar(p);
 			message(ChatColor.GREEN + p.getName() + " joined the arena!");
 			if (state.equals(ArenaState.WAITING) && getNumberOfPlayer() == minPlayers) {
@@ -126,9 +122,9 @@ public class Arena {
 			Data d = getData(p);
 			d.restore();
 			ScoreBar.removeScoreBar(p);
-			Particles.get().removePlayerEffect();
+			// Particles.get().removePlayerEffect();
 			if (p == builder) {
-				Particles.get().removeBuilderEffect();
+				// Particles.get().removeBuilderEffect();
 				// DisguiseClass.disguise(p, p.getName());
 				;
 			}
@@ -164,8 +160,8 @@ public class Arena {
 		Timer.get().stopTasks(this);
 		countdown = 0;
 		message(ChatColor.YELLOW + "The word was " + word + ".");
-		Particles.get().removeBuilderEffect();
-		Particles.get().removePlayerEffect();
+		// Particles.get().removeBuilderEffect();
+		// Particles.get().removePlayerEffect();
 		usedWords.remove(word);
 		for (Player p : getPlayers()) {
 			// DisguiseClass.disguise(p, p.getName());
@@ -211,8 +207,8 @@ public class Arena {
 
 	private void teleportBuilderToSpawn() {
 		if (builder != null) {
-			Particles.get().addBuilderEffect(builder);
-			Particles.get().removePlayerEffect();
+			// Particles.get().addBuilderEffect(builder);
+			// Particles.get().removePlayerEffect();
 			// DisguiseClass.disguise(builder, "bobthebuiler");
 			builder.teleport(spawn);
 		}
@@ -222,7 +218,7 @@ public class Arena {
 		for (Player p : getPlayers()) {
 			if (p != builder) {
 				p.teleport(lobby);
-				Particles.get().addPlayerEffect(p);
+				// Particles.get().addPlayerEffect(p);
 			}
 		}
 	}
@@ -288,7 +284,7 @@ public class Arena {
 			endRound();
 		}
 	}
-	
+
 	public String getWord() {
 		return word;
 	}
@@ -443,7 +439,7 @@ public class Arena {
 		}
 		usedWords.clear();
 		setState(ArenaState.WAITING);
-		Particles.get().removeAllEffect();
+		// Particles.get().removeAllEffect();
 		kickAll(true);
 	}
 
@@ -514,7 +510,7 @@ public class Arena {
 		}
 		usedWords.addAll(ConfigManager.WORDS);
 		Arena.builder = null;
-		Particles.get().removeAllEffect();
+		// Particles.get().removeAllEffect();
 		Timer.get().stopTasks(this);
 		this.setState(ArenaState.STARTED);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
