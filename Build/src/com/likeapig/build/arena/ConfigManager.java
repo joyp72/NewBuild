@@ -6,122 +6,101 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.likeapig.build.Build;
 
-public class ConfigManager
-{
-    private static FileConfiguration config;
-    public static int TIMEEACHPLAYERBUILD;
-    public static int TIMEPERROUND;
-    public static int POINTSBUILDERWHENWORDFOUND;
-    public static int POINTSWHENWORDFIRSTFOUND;
-    public static int POINTSWHENWORDFOUND;
-    public static boolean UPDATECHECKER;
-    public static boolean ALLOWCREATIVE;
-    public static List<String> WORDS;
-    
-    static {
-        ConfigManager.TIMEEACHPLAYERBUILD = 2;
-        ConfigManager.TIMEPERROUND = 120;
-        ConfigManager.POINTSBUILDERWHENWORDFOUND = 2;
-        ConfigManager.POINTSWHENWORDFIRSTFOUND = 3;
-        ConfigManager.POINTSWHENWORDFOUND = 1;
-        ConfigManager.UPDATECHECKER = true;
-        ConfigManager.ALLOWCREATIVE = false;
-        ConfigManager.WORDS = new ArrayList<String>() {
-            private static final long serialVersionUID = -6790038813350933029L;
-            
-            {
-                this.add("Hippie");
-                this.add("Ice Cream Man");
-                this.add("Bucket");
-                this.add("Giant");
-                this.add("Pig");
-                this.add("Cow");
-                this.add("Portal");
-                this.add("Bed");
-                this.add("Black Hole");
-                this.add("Moon");
-                this.add("Water");
-                this.add("Sun");
-                this.add("Rain");
-                this.add("Gun");
-                this.add("Fish");
-                this.add("House");
-                this.add("Trash");
-                this.add("Car");
-                this.add("Rainbow");
-                this.add("Seesaw");
-                this.add("Bridge");
-                this.add("Snowflake");
-                this.add("Plane");
-                this.add("Poop");
-                this.add("Heart");
-                this.add("Mario");
-                this.add("Triangle");
-                this.add("Church");
-                this.add("Balloon");
-                this.add("Vacuum");
-                this.add("Bike");
-                this.add("Boat");
-                this.add("Dog");
-                this.add("Earth");
-                this.add("Window");
-                this.add("Tree");
-                this.add("Pencil");
-                this.add("Computer");
-                this.add("Blood");
-                this.add("Tent");
-                this.add("Clock");
-                this.add("Flower");
-                this.add("Hotdog");
-                this.add("Volcano");
-                this.add("Crown");
-                this.add("Chair");
-                this.add("Shark");
-                this.add("Phone");
-                this.add("chicken");
-                this.add("nether");
-                this.add("skyblock");
-                this.add("facebook");
-                this.add("youtube");
-                this.add("twitter");
-                this.add("piston");
-                this.add("beach");
-                this.add("shovel");
-                this.add("ocean");
-                this.add("sunset");
-                this.add("compass");
-                this.add("notch");
-                this.add("minecraft");
-                this.add("tv");
-                this.add("ipad");
-                this.add("farm");
-                this.add("village");
-                this.add("trump");
-                this.add("mountain");
-                this.add("sidewalk");
-                this.add("stop sign");
-                this.add("emoji");
-                this.add("popcorn");
-                this.add("lamp");
-                this.add("wall");
-                this.add("meteor");
-                this.add("eclipse");
-                this.add("forest");
-                this.add("snowman");
-                this.add("cloud");
-                this.add("lightning");
-                this.add("america");
-                this.add("money");
-                this.add("book");
-                this.add("lightning");
-            }
-        };
-    }
-    
-    public static void setup() {
-        ConfigManager.config = Build.getInstance().getConfig();
-        ConfigManager.config.addDefault("words", (Object)ConfigManager.WORDS);
-        ConfigManager.WORDS = (List<String>)ConfigManager.config.getList("words");
-        Build.getInstance().saveConfig();
-    }
+public class ConfigManager {
+	public static ConfigManager instance;
+
+	static {
+		instance = new ConfigManager();
+	}
+
+	public static ConfigManager get() {
+		return instance;
+	}
+
+	public void addDefaults(List<String> words) {
+		words.add("Hippie");
+		words.add("Ice Cream Man");
+		words.add("Bucket");
+		words.add("Giant");
+		words.add("Pig");
+		words.add("Cow");
+		words.add("Portal");
+		words.add("Bed");
+		words.add("Black Hole");
+		words.add("Moon");
+		words.add("Water");
+		words.add("Sun");
+		words.add("Rain");
+		words.add("Gun");
+		words.add("Fish");
+		words.add("House");
+		words.add("Trash");
+		words.add("Car");
+		words.add("Rainbow");
+		words.add("Seesaw");
+		words.add("Bridge");
+		words.add("Snowflake");
+		words.add("Plane");
+		words.add("Poop");
+		words.add("Heart");
+		words.add("Mario");
+		words.add("Triangle");
+		words.add("Church");
+		words.add("Balloon");
+		words.add("Vacuum");
+		words.add("Bike");
+		words.add("Boat");
+		words.add("Dog");
+		words.add("Earth");
+		words.add("Window");
+		words.add("Tree");
+		words.add("Pencil");
+		words.add("Computer");
+		words.add("Blood");
+		words.add("Tent");
+		words.add("Clock");
+		words.add("Flower");
+		words.add("Hotdog");
+		words.add("Volcano");
+		words.add("Crown");
+		words.add("Chair");
+		words.add("Shark");
+		words.add("Phone");
+		words.add("chicken");
+		words.add("nether");
+		words.add("skyblock");
+		words.add("facebook");
+		words.add("youtube");
+		words.add("twitter");
+		words.add("piston");
+		words.add("beach");
+		words.add("shovel");
+		words.add("ocean");
+		words.add("sunset");
+		words.add("compass");
+		words.add("notch");
+		words.add("minecraft");
+		words.add("tv");
+		words.add("ipad");
+		words.add("farm");
+		words.add("village");
+		words.add("trump");
+		words.add("mountain");
+		words.add("sidewalk");
+		words.add("stop sign");
+		words.add("emoji");
+		words.add("popcorn");
+		words.add("lamp");
+		words.add("wall");
+		words.add("meteor");
+		words.add("eclipse");
+		words.add("forest");
+		words.add("snowman");
+		words.add("cloud");
+		words.add("lightning");
+		words.add("america");
+		words.add("money");
+		words.add("book");
+		words.add("lightning");
+	}
 }

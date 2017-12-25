@@ -35,8 +35,10 @@ public class Titles {
 		message.append(msg + "");
 		
 		PacketPlayOutTitle subtitle = new PacketPlayOutTitle(EnumTitleAction.SUBTITLE, ChatSerializer.a("{\"text\": \"" + message + "\"}"));
+		PacketPlayOutTitle length = new PacketPlayOutTitle(5, 110, 5);
 		
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(subtitle);
+		((CraftPlayer) p).getHandle().playerConnection.sendPacket(length);
 	}
 
 }

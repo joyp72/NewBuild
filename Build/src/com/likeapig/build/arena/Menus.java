@@ -208,7 +208,7 @@ public class Menus {
 								lore.add(ChatColor.GRAY + "(Click to join)");
 								lore.add(" ");
 								lore.add(ChatColor.GRAY + "Status: " + ChatColor.GREEN + "Online");
-								lore.add(ChatColor.GRAY + "Players: " + a.getPlayers().size() + "/6");
+								lore.add(ChatColor.GRAY + "Players: " + a.getPlayers().size() + "/12");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
 								ai.setItem(slot, item);
@@ -223,7 +223,7 @@ public class Menus {
 								lore.add(ChatColor.GRAY + "(Click to join)");
 								lore.add(" ");
 								lore.add(ChatColor.GRAY + "Status: " + ChatColor.GREEN + "Online");
-								lore.add(ChatColor.GRAY + "Players: " + a.getPlayers().size() + "/6");
+								lore.add(ChatColor.GRAY + "Players: " + a.getPlayers().size() + "/12");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
 							}
@@ -241,7 +241,7 @@ public class Menus {
 								ArrayList<String> lore = new ArrayList<>();
 								lore.add(" ");
 								lore.add(ChatColor.GRAY + "Status: " + ChatColor.RED + "Running");
-								lore.add(ChatColor.GRAY + "Players: " + a.getPlayers().size() + "/6");
+								lore.add(ChatColor.GRAY + "Players: " + a.getPlayers().size() + "/12");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
 								ai.setItem(slot, item);
@@ -255,7 +255,7 @@ public class Menus {
 								ArrayList<String> lore = new ArrayList<>();
 								lore.add(" ");
 								lore.add(ChatColor.GRAY + "Status: " + ChatColor.RED + "Running");
-								lore.add(ChatColor.GRAY + "Players: " + a.getPlayers().size() + "/6");
+								lore.add(ChatColor.GRAY + "Players: " + a.getPlayers().size() + "/12");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
 								ai.setItem(slot, item);

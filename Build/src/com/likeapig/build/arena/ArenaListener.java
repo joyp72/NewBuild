@@ -54,13 +54,14 @@ public class ArenaListener implements Listener {
 	public void removeLocation(Location b) {
 		this.b.remove(b);
 	}
-	
+
 	public void removeBlocks() {
 		if (!b.isEmpty()) {
 			for (Location loc : getLocation()) {
 				new BukkitRunnable() {
 					public void run() {
 						loc.getBlock().setType(Material.AIR);
+						b.clear();
 					}
 				}.runTask(Build.getPlugin(Build.class));
 			}
@@ -78,18 +79,27 @@ public class ArenaListener implements Listener {
 			ArenaManager.get().getArena(p).kickPlayer(p);
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		Arena a = ArenaManager.get().getArena(p);
 		if (a != null) {
-			if (p.getItemInHand().getType() == Material.WATER_BUCKET || p.getItemInHand().getType() == Material.LAVA_BUCKET || p.getItemInHand().getType() == Material.TNT || p.getItemInHand().getType() == Material.FLINT_AND_STEEL || p.getItemInHand().getType() == Material.BOW || p.getItemInHand().getType() == Material.MONSTER_EGG || p.getItemInHand().getType() == Material.SIGN_POST || p.getItemInHand().getType() == Material.WALL_SIGN) {
+			if (p.getItemInHand().getType() == Material.WATER_BUCKET || p.getItemInHand().getType() == Material.INK_SACK
+					|| p.getItemInHand().getType() == Material.ENDER_PEARL
+					|| p.getItemInHand().getType() == Material.EYE_OF_ENDER
+					|| p.getItemInHand().getType() == Material.LAVA_BUCKET
+					|| p.getItemInHand().getType() == Material.TNT
+					|| p.getItemInHand().getType() == Material.FLINT_AND_STEEL
+					|| p.getItemInHand().getType() == Material.BOW
+					|| p.getItemInHand().getType() == Material.MONSTER_EGG
+					|| p.getItemInHand().getType() == Material.SIGN_POST
+					|| p.getItemInHand().getType() == Material.WALL_SIGN) {
 				e.setCancelled(true);
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockDispense(BlockDispenseEvent e) {
 		Block dis = e.getBlock();
@@ -116,7 +126,7 @@ public class ArenaListener implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerFramePlace(HangingPlaceEvent e) {
 		Player p = e.getPlayer();

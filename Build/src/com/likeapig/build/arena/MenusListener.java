@@ -98,6 +98,10 @@ public class MenusListener implements Listener {
 							MegaData.get().addPurchased(p.getName(), "halo");
 							MegaData.setCoins(name, coins - 20);
 							MessageManager.get().message(p, "Successfully bought Halo effect!", MessageType.GOOD);
+							StoreItems.setActivatedString(p, "halo");
+							p.getOpenInventory().close();
+							new StoreItems(p);
+							p.openInventory(Menus.getStores().get(p));
 						}
 						if (coins < 20 && !purchased.contains("halo")) {
 							MessageManager.get().message(p, "You do not have enough MegaCoins to afford this item!",
@@ -117,6 +121,10 @@ public class MenusListener implements Listener {
 							MegaData.get().addPurchased(p.getName(), "santaHat");
 							MegaData.setCoins(name, coins - 20);
 							MessageManager.get().message(p, "Successfully bought Santa Hat effect!", MessageType.GOOD);
+							StoreItems.setActivatedString(p, "santaHat");
+							p.getOpenInventory().close();
+							new StoreItems(p);
+							p.openInventory(Menus.getStores().get(p));
 						}
 						if (coins < 35 && !purchased.contains("santaHat")) {
 							MessageManager.get().message(p, "You do not have enough MegaCoins to afford this item!",
@@ -136,6 +144,10 @@ public class MenusListener implements Listener {
 							MegaData.get().addPurchased(p.getName(), "wings");
 							MegaData.setCoins(name, coins - 20);
 							MessageManager.get().message(p, "Successfully bought Wings effect!", MessageType.GOOD);
+							StoreItems.setActivatedString(p, "wings");
+							p.getOpenInventory().close();
+							new StoreItems(p);
+							p.openInventory(Menus.getStores().get(p));
 						}
 						if (coins < 50 && !purchased.contains("wings")) {
 							MessageManager.get().message(p, "You do not have enough MegaCoins to afford this item!",
@@ -227,7 +239,6 @@ public class MenusListener implements Listener {
 									return;
 								}
 								a.kickPlayer(p);
-								MessageManager.get().message(p, "You left the arena!");
 							}
 						}
 					}

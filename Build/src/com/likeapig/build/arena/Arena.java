@@ -143,7 +143,9 @@ public class Arena {
 			}
 			Titles.get().addTitle(p, "§6§lYou have joined " + getName().toUpperCase());
 			ActionBars.get().addActionBar(p, "§e§lScore: " + d.getScore());
-			ScoreBoard.get().updateSB(p);
+			for (Player pl : getPlayers()) {
+				ScoreBoard.get().updateSB(pl);
+			}
 		}
 	}
 
@@ -186,13 +188,16 @@ public class Arena {
 	public void endRound() {
 		Timer.get().stopTasks(this);
 		countdown = 0;
-		message(ChatColor.YELLOW + "The word was " + word + ".");
+		for (Player pl : getPlayers()) {
+			Titles.get().addTitle(pl, " ");
+			Titles.get().addSubTitle(pl, ChatColor.WHITE + "The word was " + ChatColor.GREEN + word + ChatColor.WHITE + ".");
+		}
 		usedWords.remove(word);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
 			public void run() {
 				startNewRound();
 			}
-		}, 40L);
+		}, 120L);
 	}
 
 	public void onTimerTick(String arg, int timer) {
@@ -252,7 +257,12 @@ public class Arena {
 
 	private void getNewWord() {
 		Random r = new Random();
-		word = usedWords.get(r.nextInt(usedWords.size()));
+		if (usedWords.size() > 0) {
+			word = usedWords.get(r.nextInt(usedWords.size()));
+		} else {
+			usedWords.addAll(Settings.getInstance().getWords());
+			word = usedWords.get(r.nextInt(usedWords.size()));
+		}
 	}
 
 	public void setMinPlayers(int i) {
@@ -288,7 +298,7 @@ public class Arena {
 			getData(builder).increaseScore(2);
 			MessageManager.get().message(builder, "+2 Score", MessageType.GOOD);
 		} else {
-			message(ChatColor.GREEN + d.getPlayer().getName() + " Guessed the word!");
+			message(ChatColor.GRAY + d.getPlayer().getName() + " Guessed the word!");
 			MessageManager.get().message(d.getPlayer(), "+1", MessageType.GOOD);
 			d.increaseScore(1);
 			MegaData.addGC(d.getPlayer().getName(), 1);
@@ -329,10 +339,10 @@ public class Arena {
 				e.setCancelled(true);
 				onWordGuessed(d);
 			} else {
-				e.setMessage(ChatColor.GRAY + s);
+				e.setMessage(ChatColor.GRAY + e.getMessage());
 			}
 		} else {
-			e.setMessage(ChatColor.GRAY + s);
+			e.setMessage(ChatColor.GRAY + e.getMessage());
 		}
 	}
 
@@ -354,7 +364,7 @@ public class Arena {
 			}
 		}
 		builder = selected.getPlayer();
-		if (selected.getTimeBuild() > 3 - 1) {
+		if (selected.getTimeBuild() > 0) {
 			final List<Data> winners = new ArrayList<Data>();
 			for (Data p2 : datas) {
 				if (winners.isEmpty()) {
@@ -460,8 +470,8 @@ public class Arena {
 	public void stop() {
 		Timer.get().stopTasks(this);
 		builder = null;
+		ArenaListener.get().removeBlocks();
 		disableParticles();
-		usedWords.clear();
 		countdown = 0;
 		setState(ArenaState.WAITING);
 		kickAll(true);
@@ -540,7 +550,6 @@ public class Arena {
 				MegaData.addRW(d.getPlayer().getName(), 1);
 			}
 		}
-		usedWords.addAll(ConfigManager.WORDS);
 		Arena.builder = null;
 		// Particles.get().removeAllEffect();
 		Timer.get().stopTasks(this);

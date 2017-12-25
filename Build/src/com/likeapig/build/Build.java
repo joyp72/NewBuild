@@ -13,24 +13,23 @@ import com.likeapig.build.arena.Timer;
 import com.likeapig.build.commands.CommandsManager;
 
 public class Build extends JavaPlugin {
-	
+
 	public static Build instance;
-	
+
 	public void onEnable() {
 		getLogger().info("Enabled!");
 		instance = this;
 		Timer.get();
 		Settings.getInstance().setup(this);
-		ConfigManager.setup();
 		ArenaManager.get().setupArenas();
 		ArenaListener.get().setup();
 		MenusListener.get().setup();
 		CommandsManager.get().setup();
 		MegaData.get().setup(this);
-		//BubbleListener.get().setup();
-		
+		// BubbleListener.get().setup();
+
 	}
-	
+
 	public void onDisable() {
 		getLogger().info("Disabled!");
 		for (Arena a : ArenaManager.get().getArenas()) {
@@ -39,7 +38,7 @@ public class Build extends JavaPlugin {
 			}
 		}
 	}
-	
+
 	public static Build getInstance() {
 		return instance;
 	}
