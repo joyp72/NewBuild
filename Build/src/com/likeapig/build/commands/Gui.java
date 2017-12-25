@@ -13,6 +13,6 @@ public class Gui extends Commands {
 	@Override
 	public void onCommand(Player p, String[] args) {
 		new Menus(p);
-		p.openInventory(Menus.getInvMain());
+		p.openInventory(Menus.getMenus().get(p));
 	}
 }

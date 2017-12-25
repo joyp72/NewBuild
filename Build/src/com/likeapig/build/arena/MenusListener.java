@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import com.likeapig.build.Build;
 import com.likeapig.build.commands.MessageManager;
@@ -34,8 +35,8 @@ public class MenusListener implements Listener {
 	public void onClick(InventoryClickEvent e) {
 
 		// Main Menu
-		if (Menus.getInvMain() != null) {
-			if (e.getInventory().getName().equalsIgnoreCase(Menus.getInvMain().getName())) {
+		if (Menus.getMenus() != null) {
+			if (Menus.getMenus().containsValue(e.getInventory())) {
 				if (e.getCurrentItem() == null) {
 					return;
 				}
@@ -43,7 +44,7 @@ public class MenusListener implements Listener {
 					e.setCancelled(true);
 					if (e.getWhoClicked() instanceof Player) {
 						Player p = (Player) e.getWhoClicked();
-						p.openInventory(Menus.getInvArenas());
+						p.openInventory(Menus.getArenas().get(p));
 					}
 				}
 				if (e.getCurrentItem().getType() == Material.SKULL_ITEM
@@ -55,11 +56,12 @@ public class MenusListener implements Listener {
 				if (e.getCurrentItem().getType() == Material.CHEST) {
 					e.setCancelled(true);
 					Player p = (Player) e.getWhoClicked();
+					Menus.resetInvs(p);
 					new Menus(p);
 					new StoreItems(p);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
 						public void run() {
-							p.openInventory(Menus.getInvStore());
+							p.openInventory(Menus.getStores().get(p));
 						}
 					}, 1L);
 				}
@@ -67,8 +69,8 @@ public class MenusListener implements Listener {
 		}
 
 		// Store
-		if (Menus.getInvStore() != null) {
-			if (e.getInventory().getName().equalsIgnoreCase(Menus.getInvStore().getName())) {
+		if (Menus.getStores() != null) {
+			if (Menus.getStores().containsValue(e.getInventory())) {
 				if (e.getCurrentItem() == null) {
 					return;
 				}
@@ -83,7 +85,7 @@ public class MenusListener implements Listener {
 							StoreItems.setActivatedString(p, "default");
 							p.getOpenInventory().close();
 							new StoreItems(p);
-							p.openInventory(Menus.getInvStore());
+							p.openInventory(Menus.getStores().get(p));
 						}
 					}
 
@@ -102,16 +104,17 @@ public class MenusListener implements Listener {
 							StoreItems.setActivatedString(p, "halo");
 							p.getOpenInventory().close();
 							new StoreItems(p);
-							p.openInventory(Menus.getInvStore());
+							p.openInventory(Menus.getStores().get(p));
 						}
 					}
 					if (e.getCurrentItem().getType() == Material.BEDROCK) {
 						e.setCancelled(true);
+						Menus.resetInvs(p);
 						new Menus(p);
 						new StoreItems(p);
 						Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
 							public void run() {
-								p.openInventory(Menus.getInvMain());
+								p.openInventory(Menus.getMenus().get(p));
 							}
 						}, 1L);
 					}
@@ -126,8 +129,8 @@ public class MenusListener implements Listener {
 		}
 
 		// Arenas
-		if (Menus.getInvArenas() != null) {
-			if (e.getInventory().getName().equalsIgnoreCase(Menus.getInvArenas().getName())) {
+		if (Menus.getArenas() != null) {
+			if (Menus.getArenas().containsValue(e.getInventory())) {
 				if (e.getCurrentItem() == null) {
 					return;
 				}
@@ -193,7 +196,7 @@ public class MenusListener implements Listener {
 						if (dName.equalsIgnoreCase("back to menu")) {
 							if (e.getWhoClicked() instanceof Player) {
 								Player p = (Player) e.getWhoClicked();
-								p.openInventory(Menus.getInvMain());
+								p.openInventory(Menus.getMenus().get(p));
 							}
 						}
 					}

@@ -49,7 +49,7 @@ public class StoreItems {
 			active.put(p, new Activate("default", p));
 		}
 
-		si = Menus.getInvStore();
+		si = Menus.getStores().get(p);
 
 		ItemStack de = new ItemStack(Material.PAPER);
 		{

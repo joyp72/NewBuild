@@ -1,9 +1,9 @@
 package com.likeapig.build.arena;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,72 +19,81 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Menus {
 
-	private static Inventory ai;
-	private static Inventory mi;
-	private static Inventory si;
-	private static Inventory mz;
-	private static Inventory mz1;
-	private static Inventory mz2;
-	private static Inventory mz3;
-	private static Inventory mz4;
-	private static Inventory mz5;
-	private static Inventory mz6;
-	private static Inventory mz7;
-	private static Inventory mz8;
-	private static Inventory mz9;
-	private static Inventory mz10;
-	private static Inventory mzend;
+	// private static Inventory ai;
+	// private static Inventory mi;
+	// private static Inventory si;
 	private int size = 9;
 	private int slot = 0;
 	private String bm = "Arenas";
 	private String mm = "Main Menu";
 	private String sm = "Store";
-	private String up = "Up";
-	private String down = "Down";
-	private String left = "Left";
-	private String right = "Right";
-	private String sameasbefore = "Same as before";
-	private String sameastwobefore = "Same as two before";
-	private String sameasthebeginning = "Sameasthebeginning";
-	private String sameasthreebefore = "Same as three before";
-	private String mazeend = "End of the maze";
+	private static HashMap<Player, Inventory> menus = new HashMap<Player, Inventory>();
+	private static HashMap<Player, Inventory> arenas = new HashMap<Player, Inventory>();
+	private static HashMap<Player, Inventory> stores = new HashMap<Player, Inventory>();
 
-	public static Inventory getInvArenas() {
-		return ai;
+	// public static Inventory getInvArenas() {
+	// return ai;
+	// }
+
+	// public static Inventory getInvMain() {
+	// return mi;
+	// }
+
+	// public static Inventory getInvStore() {
+	// return si;
+	// }
+
+	public static HashMap<Player, Inventory> getMenus() {
+		return menus;
 	}
 
-	public static Inventory getInvMain() {
-		return mi;
+	public static HashMap<Player, Inventory> getArenas() {
+		return arenas;
 	}
-	
-	public static Inventory getInvStore() {
-		return si;
+
+	public static HashMap<Player, Inventory> getStores() {
+		return stores;
+	}
+
+	public static void resetInvs(Player p) {
+		if (menus.get(p) != null) {
+			menus.remove(p);
+		}
+		if (arenas.get(p) != null) {
+			arenas.remove(p);
+		}
+		if (stores.get(p) != null) {
+			stores.remove(p);
+		}
+	}
+
+	public static boolean containsInv(Inventory i) {
+		return menus.containsValue(i) || arenas.containsValue(i) || stores.containsValue(i);
 	}
 
 	private final static int CENTER_PX = 34 * 3;
 
 	public Menus(Player p) {
-		ai = Bukkit.createInventory(p, size, bm);
-		mi = Bukkit.createInventory(p, size, mm);
-		si = Bukkit.createInventory(p, 45, sm);
-		mz = Bukkit.createInventory(p, size, up);
-		mz1 = Bukkit.createInventory(p, size, left);
-		mz2 = Bukkit.createInventory(p, size, down);
-		mz3 = Bukkit.createInventory(p, size, down);
-		mz4 = Bukkit.createInventory(p, size, sameastwobefore);
-		mz5 = Bukkit.createInventory(p, size, sameasthebeginning);
-		mz6 = Bukkit.createInventory(p, size, sameastwobefore);
-		mz7 = Bukkit.createInventory(p, size, left);
-		mz8 = Bukkit.createInventory(p, size, right);
-		mz9 = Bukkit.createInventory(p, size, sameasbefore);
-		mz10 = Bukkit.createInventory(p, size, sameasthreebefore);
-		mzend = Bukkit.createInventory(p, size, mazeend);
-		
+		// ai = Bukkit.createInventory(p, size, bm);
+		// mi = Bukkit.createInventory(p, size, mm);
+		// si = Bukkit.createInventory(p, 45, sm);
+		Inventory mi = Bukkit.createInventory(p, size, mm);
+		if (menus.get(p) == null) {
+			menus.put(p, mi);
+		}
+		Inventory ai = Bukkit.createInventory(p, size, mm);
+		if (arenas.get(p) == null) {
+			arenas.put(p, ai);
+		}
+		Inventory si = Bukkit.createInventory(p, 45, mm);
+		if (stores.get(p) == null) {
+			stores.put(p, si);
+		}
 
 		ItemStack arenas = new ItemStack(Material.WORKBENCH);
 		{
 			ItemMeta meta = arenas.getItemMeta();
-			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD +  "Arenas");
+			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Arenas");
 			ArrayList<String> lore = new ArrayList<>();
 			lore.add(ChatColor.GRAY + "Click to view arenas");
 			lore.add(" ");
@@ -92,7 +101,7 @@ public class Menus {
 			arenas.setItemMeta(meta);
 			mi.setItem(7, arenas);
 		}
-		
+
 		ItemStack store = new ItemStack(Material.CHEST);
 		{
 			ItemMeta meta = store.getItemMeta();
@@ -137,19 +146,22 @@ public class Menus {
 			ArrayList<String> lore = new ArrayList<>();
 			lore.add(ChatColor.GRAY + "By like_a_pig");
 			lore.add("");
-			lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "Overview: " );
-			//lore.add(ChatColor.GRAY + "Once an arena has enough players,");
-			//lore.add(ChatColor.GRAY + "a random player in the lobby will become");
-			//lore.add(ChatColor.GRAY + "the builder who will be teleported in the");
-			//lore.add(ChatColor.GRAY + "middle of the arena and the game will begin.");
-			//lore.add(ChatColor.GRAY + "The builder will be given a word to build and");
-			//lore.add(ChatColor.GRAY + "the rest of the players must try and guess that");
-			//lore.add(ChatColor.GRAY + "word in order to gain points. The player who");
-			//lore.add(ChatColor.GRAY + "guesses the word first gains 3 poionts, and any");
-			//lore.add(ChatColor.GRAY + "players who guess after that will gain 1 point.");
-			//lore.add(ChatColor.GRAY + "On the first time the word is guessed, the builder");
-			//lore.add(ChatColor.GRAY + "gains 2 points.");
-			String[] l = formatLore("Once an arena has enough players, a random player in the lobby will become the builder who will be teleported in the middle of the arena and the game will begin. The builder will be given a word to build and the rest of the players must try and guess that word in order to gain points. The player who guesses the word first gains 3 points, and any players who guess after that will gain 1 point. On the first time the word is guessed, the builder gains 2 points.", 30, org.bukkit.ChatColor.GRAY);
+			lore.add(ChatColor.WHITE + "" + ChatColor.BOLD + "Overview: ");
+			// lore.add(ChatColor.GRAY + "Once an arena has enough players,");
+			// lore.add(ChatColor.GRAY + "a random player in the lobby will become");
+			// lore.add(ChatColor.GRAY + "the builder who will be teleported in the");
+			// lore.add(ChatColor.GRAY + "middle of the arena and the game will begin.");
+			// lore.add(ChatColor.GRAY + "The builder will be given a word to build and");
+			// lore.add(ChatColor.GRAY + "the rest of the players must try and guess that");
+			// lore.add(ChatColor.GRAY + "word in order to gain points. The player who");
+			// lore.add(ChatColor.GRAY + "guesses the word first gains 3 poionts, and any");
+			// lore.add(ChatColor.GRAY + "players who guess after that will gain 1 point.");
+			// lore.add(ChatColor.GRAY + "On the first time the word is guessed, the
+			// builder");
+			// lore.add(ChatColor.GRAY + "gains 2 points.");
+			String[] l = formatLore(
+					"Once an arena has enough players, a random player in the lobby will become the builder who will be teleported in the middle of the arena and the game will begin. The builder will be given a word to build and the rest of the players must try and guess that word in order to gain points. The player who guesses the word first gains 3 points, and any players who guess after that will gain 1 point. On the first time the word is guessed, the builder gains 2 points.",
+					30, org.bukkit.ChatColor.GRAY);
 			lore.add(l[0]);
 			lore.add(l[1]);
 			lore.add(l[2]);
@@ -275,7 +287,7 @@ public class Menus {
 				ItemStack item = new ItemStack(Material.BEDROCK);
 				{
 					ItemMeta meta = item.getItemMeta();
-					meta.setDisplayName(ChatColor.RED + ""  + ChatColor.BOLD + "Leave");
+					meta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Leave");
 					ArrayList<String> lore = new ArrayList<>();
 					Arena a = ArenaManager.get().getArena(p);
 					if (a == null) {
@@ -291,96 +303,43 @@ public class Menus {
 		}
 
 	}
-	
-	public static Inventory getMaze() {
-		return mz;
-	}
-	
-	public static Inventory getMaze1() {
-		return mz1;
-	}
-	
-	public static Inventory getMaze2() {
-		return mz2;
-	}
-	
-	public static Inventory getMaze3() {
-		return mz3;
-	}
-	
-	public static Inventory getMaze4() {
-		return mz4;
-	}
-	
-	public static Inventory getMaze5() {
-		return mz5;
-	}
-	
-	public static Inventory getMaze6() {
-		return mz6;
-	}
-	
-	public static Inventory getMaze7() {
-		return mz7;
-	}
-	
-	public static Inventory getMaze8() {
-		return mz8;
-	}
-	
-	public static Inventory getMaze9() {
-		return mz9;
-	}
-	
-	public static Inventory getMaze10() {
-		return mz10;
-	}
-	
-	public static Inventory getMazeEnd() {
-		return mzend;
-	}
-	
+
 	public static String[] formatLore(String text, int size, org.bukkit.ChatColor color) {
-        List<String> ret = new ArrayList<String>();
+		List<String> ret = new ArrayList<String>();
 
-        if(text == null || text.length() == 0)
-            return new String[ret.size()];
-        
-        String[] words = text.split(" ");
-        String rebuild = "";
-        
-        int lastAdded = 0;
-        for(int i = 0; i < words.length; i++)
-        {
-            int wordLen = words[i].length();
-            if(rebuild.length() + wordLen > 40 || words[i].contains("\n") || words[i].equals(Character.LINE_SEPARATOR))
-            {
-                lastAdded = i;
-                
-                ret.add(color + rebuild);
-                rebuild = "";
-                if(words[i].equalsIgnoreCase("\n")) {
-                    words[i] = "";
-                    continue;
-                }
-                    
-                
-            } 
-                rebuild = rebuild + " " + words[i];
-            
-            
-            
-        }
-        if(!rebuild.equalsIgnoreCase(""))
-            ret.add(color + rebuild);
-        
-        String[] val = new String[ret.size()];
-       for(int i = 0; i < ret.size(); i++)
-            val[i] = ret.get(i);
-            
+		if (text == null || text.length() == 0)
+			return new String[ret.size()];
 
-        return val;
-    }
+		String[] words = text.split(" ");
+		String rebuild = "";
+
+		int lastAdded = 0;
+		for (int i = 0; i < words.length; i++) {
+			int wordLen = words[i].length();
+			if (rebuild.length() + wordLen > 40 || words[i].contains("\n")
+					|| words[i].equals(Character.LINE_SEPARATOR)) {
+				lastAdded = i;
+
+				ret.add(color + rebuild);
+				rebuild = "";
+				if (words[i].equalsIgnoreCase("\n")) {
+					words[i] = "";
+					continue;
+				}
+
+			}
+			rebuild = rebuild + " " + words[i];
+
+		}
+		if (!rebuild.equalsIgnoreCase(""))
+			ret.add(color + rebuild);
+
+		String[] val = new String[ret.size()];
+		for (int i = 0; i < ret.size(); i++)
+			val[i] = ret.get(i);
+
+		return val;
+	}
 
 	public static String sendCenteredMessage(String message) {
 		message = ChatColor.translateAlternateColorCodes('&', message);

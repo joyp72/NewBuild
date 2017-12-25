@@ -70,73 +70,47 @@ public class Particles {
 
 	public void PlayerCircleEffect(Player player) {
 		if (player != null) {
-			id3 = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
-
-				float radius = 0.3f;
-
-				@Override
-				public void run() {
-					Location loc = player.getLocation().clone();
-					for (int i = 0; i < 12; i++) {
-						double inc = (2 * Math.PI) / 12;
-						float angle = (float) (i * inc);
-						float x = (float) (Math.cos(angle) * radius);
-						float z = (float) (Math.sin(angle) * radius);
-						loc.add(x, 2.5, z);
-						displayColoredParticle(loc, "808080");
-						loc.subtract(x, 2.5, z);
-					}
-				}
-			}, 0L, 0L);
+			float radius = 0.3f;
+			Location loc = player.getLocation().clone();
+			for (int i = 0; i < 12; i++) {
+				double inc = (2 * Math.PI) / 12;
+				float angle = (float) (i * inc);
+				float x = (float) (Math.cos(angle) * radius);
+				float z = (float) (Math.sin(angle) * radius);
+				loc.add(x, 2.5, z);
+				displayColoredParticle(loc, "808080");
+				loc.subtract(x, 2.5, z);
+			}
 		}
 	}
 
 	public void BuilderCircleEffect(Player builder) {
 		if (builder != null) {
-			id4 = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
-
-				float radius = 0.3f;
-
-				@Override
-				public void run() {
-					Location loc = builder.getLocation().clone();
-					for (int i = 0; i < 12; i++) {
-						double inc = (2 * Math.PI) / 12;
-						float angle = (float) (i * inc);
-						float x = (float) (Math.cos(angle) * radius);
-						float z = (float) (Math.sin(angle) * radius);
-						loc.add(x, 2.5, z);
-						displayColoredParticle(loc, "FFD700");
-						loc.subtract(x, 2.5, z);
-					}
-				}
-			}, 0L, 0L);
+			float radius = 0.3f;
+			Location loc = builder.getLocation().clone();
+			for (int i = 0; i < 12; i++) {
+				double inc = (2 * Math.PI) / 12;
+				float angle = (float) (i * inc);
+				float x = (float) (Math.cos(angle) * radius);
+				float z = (float) (Math.sin(angle) * radius);
+				loc.add(x, 2.5, z);
+				displayColoredParticle(loc, "FFD700");
+				loc.subtract(x, 2.5, z);
+			}
 		}
 	}
 
 	public void builderSimpleEffect(Player builder) {
 		if (builder != null) {
-			id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
-
-				@Override
-				public void run() {
-					Location loc = builder.getLocation().add(0, 2.5, 0);
-					displayColoredParticle(loc, "FFD700");
-				}
-			}, 0L, 0L);
+			Location loc = builder.getLocation().add(0, 2.5, 0);
+			displayColoredParticle(loc, "FFD700");
 		}
 	}
 
 	public void playerSimpleEffect(Player player) {
 		if (player != null) {
-			id2 = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
-
-				@Override
-				public void run() {
-					Location loc = player.getLocation().add(0, 2.5, 0);
-					displayColoredParticle(loc, "808080");
-				}
-			}, 0L, 0L);
+			Location loc = player.getLocation().add(0, 2.5, 0);
+			displayColoredParticle(loc, "808080");
 		}
 	}
 

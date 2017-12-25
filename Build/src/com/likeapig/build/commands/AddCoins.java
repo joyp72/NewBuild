@@ -12,7 +12,7 @@ public class AddCoins extends Commands {
 
 	@Override
 	public void onCommand(final Player sender, final String[] args) {
-		MegaData.addCoins(sender.getName());
+		MegaData.setCoins(sender.getName(), 50);
 		MessageManager.get().message(sender, "Coins added.");
 	}
 }

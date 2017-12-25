@@ -20,7 +20,10 @@ import com.likeapig.build.Build;
 import com.likeapig.build.Settings;
 import com.likeapig.build.commands.MessageManager;
 import com.likeapig.build.commands.MessageManager.MessageType;
+import com.likeapig.build.scoreboard.ScoreBoard;
 import com.likeapig.build.utils.LocationUtils;
+
+import Particles.Particles;
 
 public class Arena {
 
@@ -36,17 +39,18 @@ public class Arena {
 	private ArenaState state;
 	private int countdown;
 	private BossBar b;
+	private int id;
 	public static List<String> usedWords = new ArrayList<String>();
 
 	public Arena(String name, Location location) {
 		state = ArenaState.STOPPED;
 		minPlayers = 4;
-		maxPlayers = 6;
+		maxPlayers = 12;
 		wordGuessed = false;
 		datas = new ArrayList<Data>();
 		this.name = name;
 		spawn = location;
-		countdown = 30;
+		countdown = 0;
 		loadFromConfig();
 		saveToConfig();
 		checkState();
@@ -60,6 +64,26 @@ public class Arena {
 
 	public Location getLobby() {
 		return lobby;
+	}
+
+	public void enableParticles() {
+		Bukkit.getServer().getScheduler().cancelTask(id);
+		id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Build.getInstance(), new Runnable() {
+			@Override
+			public void run() {
+				for (Player p : getPlayers()) {
+					if (p == builder) {
+						Particles.get().addBuilderEffect(p);
+					} else {
+						Particles.get().addPlayerEffect(p);
+					}
+				}
+			}
+		}, 0L, 0L);
+	}
+	
+	public void disableParticles() {
+		Bukkit.getServer().getScheduler().cancelTask(id);
 	}
 
 	public void saveToConfig() {
@@ -106,14 +130,14 @@ public class Arena {
 			datas.add(d);
 			d.resetPlayer();
 			p.teleport(lobby);
-			// Particles.get().addPlayerEffect(p);
-			new ScoreBar(p);
+			enableParticles();
 			message(ChatColor.GREEN + p.getName() + " joined the arena!");
 			if (state.equals(ArenaState.WAITING) && getNumberOfPlayer() == minPlayers) {
 				start();
 			}
 			Titles.get().addTitle(p, "§6§lYou have joined " + getName().toUpperCase());
 			ActionBars.get().addActionBar(p, "§e§lScore: " + d.getScore());
+			ScoreBoard.get().updateSB(p);
 		}
 	}
 
@@ -121,14 +145,8 @@ public class Arena {
 		if (containsPlayer(p)) {
 			Data d = getData(p);
 			d.restore();
-			ScoreBar.removeScoreBar(p);
-			// Particles.get().removePlayerEffect();
-			if (p == builder) {
-				// Particles.get().removeBuilderEffect();
-				// DisguiseClass.disguise(p, p.getName());
-				;
-			}
 			datas.remove(d);
+			ScoreBoard.get().removeSB(p);
 			if (state.equals(ArenaState.STARTING) && getNumberOfPlayer() < minPlayers) {
 				this.setState(ArenaState.WAITING);
 			} else if (state.equals(ArenaState.STARTING)
@@ -160,12 +178,7 @@ public class Arena {
 		Timer.get().stopTasks(this);
 		countdown = 0;
 		message(ChatColor.YELLOW + "The word was " + word + ".");
-		// Particles.get().removeBuilderEffect();
-		// Particles.get().removePlayerEffect();
 		usedWords.remove(word);
-		for (Player p : getPlayers()) {
-			// DisguiseClass.disguise(p, p.getName());
-		}
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
 			public void run() {
 				startNewRound();
@@ -176,6 +189,9 @@ public class Arena {
 	public void onTimerTick(String arg, int timer) {
 		if (arg.equalsIgnoreCase("endround")) {
 			countdown = timer;
+			for (Player p : getPlayers()) {
+				ScoreBoard.get().updateSB(p);
+			}
 			if (countdown < 30) {
 				for (Player p : getPlayers()) {
 					ActionBars.get().addActionBar(p, "§c§lTime left: " + countdown);
@@ -207,9 +223,6 @@ public class Arena {
 
 	private void teleportBuilderToSpawn() {
 		if (builder != null) {
-			// Particles.get().addBuilderEffect(builder);
-			// Particles.get().removePlayerEffect();
-			// DisguiseClass.disguise(builder, "bobthebuiler");
 			builder.teleport(spawn);
 		}
 	}
@@ -218,7 +231,6 @@ public class Arena {
 		for (Player p : getPlayers()) {
 			if (p != builder) {
 				p.teleport(lobby);
-				// Particles.get().addPlayerEffect(p);
 			}
 		}
 	}
@@ -257,19 +269,13 @@ public class Arena {
 			message(ChatColor.GREEN + d.getPlayer().getName() + " Guessed the word!");
 			MessageManager.get().message(d.getPlayer(), "You are the first to guess correct! (+3)", MessageType.GOOD);
 			d.increaseScore(3);
-			ScoreBar.removeScoreBar(d.getPlayer());
-			new ScoreBar(d.getPlayer());
 			MegaData.addGC(d.getPlayer().getName(), 1);
 			getData(builder).increaseScore(2);
-			ScoreBar.removeScoreBar(builder);
-			new ScoreBar(builder);
 			MessageManager.get().message(builder, "Someone guessed correct! (+2)", MessageType.GOOD);
 		} else {
 			message(ChatColor.GREEN + d.getPlayer().getName() + " Guessed the word!");
 			MessageManager.get().message(d.getPlayer(), "You guessed correct! (+1)", MessageType.GOOD);
 			d.increaseScore(1);
-			ScoreBar.removeScoreBar(d.getPlayer());
-			new ScoreBar(d.getPlayer());
 			MegaData.addGC(d.getPlayer().getName(), 1);
 		}
 		d.setGuessedWord(true);
@@ -343,6 +349,9 @@ public class Arena {
 					winners.add(p2);
 				} else {
 					if (p2.getScore() != winners.get(0).getScore()) {
+						MegaData.addCoins(winners.get(0).getPlayer().getName());
+						MessageManager.get().message(p2.getPlayer(),
+								ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
 						continue;
 					}
 					winners.add(p2);
@@ -360,10 +369,10 @@ public class Arena {
 					} else {
 						s = String.valueOf(s) + ", " + d.getPlayer().getName() + " (" + d.getScore() + ")";
 					}
-					MegaData.addCoins(d.getPlayer().getName());
+					MegaData.setCoins(d.getPlayer().getName(), 5);
 					MegaData.addGW(d.getPlayer().getName(), 1);
 					MessageManager.get().message(d.getPlayer(),
-							ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
+							ChatColor.BLUE + "§lYou gained 5 MegaCoins, check your stats!");
 				}
 				message(s);
 				for (Player p : getPlayers()) {
@@ -388,10 +397,10 @@ public class Arena {
 					Titles.get().addSubTitle(p, "§6Winner: " + winners.get(0).getPlayer().getName() + " ("
 							+ winners.get(0).getScore() + ")");
 				}
-				MegaData.addCoins(winners.get(0).getPlayer().getName());
+				MegaData.setCoins(winners.get(0).getPlayer().getName(), 5);
 				MegaData.addGW(winners.get(0).getPlayer().getName(), 1);
 				MessageManager.get().message(winners.get(0).getPlayer(),
-						ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
+						ChatColor.BLUE + "§lYou gained 5 MegaCoins, check your stats!");
 				firework(getSpawn());
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
 					public void run() {
@@ -434,12 +443,12 @@ public class Arena {
 	}
 
 	public void stop() {
-		if (this != null) {
-			Timer.get().stopTasks(this);
-		}
+		Timer.get().stopTasks(this);
+		builder = null;
+		disableParticles();
 		usedWords.clear();
+		countdown = 0;
 		setState(ArenaState.WAITING);
-		// Particles.get().removeAllEffect();
 		kickAll(true);
 	}
 
@@ -457,6 +466,10 @@ public class Arena {
 
 	public Location getSpawn() {
 		return spawn;
+	}
+
+	public int getCountdown() {
+		return countdown;
 	}
 
 	public List<Player> getPlayers() {
@@ -500,6 +513,10 @@ public class Arena {
 			}
 		}
 		return null;
+	}
+
+	public List<Data> getDatas() {
+		return datas;
 	}
 
 	public void start() {

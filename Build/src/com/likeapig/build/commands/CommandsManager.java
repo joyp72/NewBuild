@@ -58,9 +58,10 @@ public class CommandsManager implements CommandExecutor {
 			return true;
 		}
 		if (gui && args.length == 0) {
+			Menus.resetInvs(p);
 			new Menus(p);
 			new StoreItems(p);
-			p.openInventory(Menus.getInvMain());
+			p.openInventory(Menus.getMenus().get(p));
 		}
 		if (args.length == 0 && !gui) {
 			MessageManager.get().message(p, "Commands List:");

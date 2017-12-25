@@ -9,6 +9,7 @@ import com.likeapig.build.arena.ArenaManager;
 import com.likeapig.build.arena.ConfigManager;
 import com.likeapig.build.arena.MegaData;
 import com.likeapig.build.arena.MenusListener;
+import com.likeapig.build.arena.Timer;
 import com.likeapig.build.commands.CommandsManager;
 
 public class Build extends JavaPlugin {
@@ -18,6 +19,7 @@ public class Build extends JavaPlugin {
 	public void onEnable() {
 		getLogger().info("Enabled!");
 		instance = this;
+		Timer.get();
 		Settings.getInstance().setup(this);
 		ConfigManager.setup();
 		ArenaManager.get().setupArenas();
@@ -32,8 +34,9 @@ public class Build extends JavaPlugin {
 	public void onDisable() {
 		getLogger().info("Disabled!");
 		for (Arena a : ArenaManager.get().getArenas()) {
-			a.stop();
-			a.kickAll(true);
+			if (a.isStarted() || a.getStateName().equals("WAITING")) {
+				a.stop();
+			}
 		}
 	}
 	
