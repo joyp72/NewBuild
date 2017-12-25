@@ -1,5 +1,7 @@
 package com.likeapig.build.arena;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -91,17 +93,56 @@ public class MenusListener implements Listener {
 
 					if (e.getCurrentItem().getType() == Material.RECORD_8) {
 						e.setCancelled(true);
-						if (coins >= 50 && !MegaData.getHalo(name)) {
-							MegaData.setHalo(name, true);
-							MegaData.setCoins(name, coins - 50);
+						List<String> purchased = MegaData.get().getPurchased(p.getName());
+						if (coins >= 20 && !purchased.contains("halo")) {
+							MegaData.get().addPurchased(p.getName(), "halo");
+							MegaData.setCoins(name, coins - 20);
 							MessageManager.get().message(p, "Successfully bought Halo effect!", MessageType.GOOD);
 						}
-						if (coins < 50 && !MegaData.getHalo(name)) {
+						if (coins < 20 && !purchased.contains("halo")) {
 							MessageManager.get().message(p, "You do not have enough MegaCoins to afford this item!",
 									MessageType.BAD);
 						}
-						if (MegaData.getHalo(name) && StoreItems.getActivatedString(p) != "halo") {
+						if (purchased.contains("halo") && StoreItems.getActivatedString(p) != "halo") {
 							StoreItems.setActivatedString(p, "halo");
+							p.getOpenInventory().close();
+							new StoreItems(p);
+							p.openInventory(Menus.getStores().get(p));
+						}
+					}
+					if (e.getCurrentItem().getType() == Material.REDSTONE) {
+						e.setCancelled(true);
+						List<String> purchased = MegaData.get().getPurchased(p.getName());
+						if (coins >= 35 && !purchased.contains("santaHat")) {
+							MegaData.get().addPurchased(p.getName(), "santaHat");
+							MegaData.setCoins(name, coins - 20);
+							MessageManager.get().message(p, "Successfully bought Santa Hat effect!", MessageType.GOOD);
+						}
+						if (coins < 35 && !purchased.contains("santaHat")) {
+							MessageManager.get().message(p, "You do not have enough MegaCoins to afford this item!",
+									MessageType.BAD);
+						}
+						if (purchased.contains("santaHat") && StoreItems.getActivatedString(p) != "santaHat") {
+							StoreItems.setActivatedString(p, "santaHat");
+							p.getOpenInventory().close();
+							new StoreItems(p);
+							p.openInventory(Menus.getStores().get(p));
+						}
+					}
+					if (e.getCurrentItem().getType() == Material.FEATHER) {
+						e.setCancelled(true);
+						List<String> purchased = MegaData.get().getPurchased(p.getName());
+						if (coins >= 50 && !purchased.contains("wings")) {
+							MegaData.get().addPurchased(p.getName(), "wings");
+							MegaData.setCoins(name, coins - 20);
+							MessageManager.get().message(p, "Successfully bought Wings effect!", MessageType.GOOD);
+						}
+						if (coins < 50 && !purchased.contains("wings")) {
+							MessageManager.get().message(p, "You do not have enough MegaCoins to afford this item!",
+									MessageType.BAD);
+						}
+						if (purchased.contains("wings") && StoreItems.getActivatedString(p) != "wings") {
+							StoreItems.setActivatedString(p, "wings");
 							p.getOpenInventory().close();
 							new StoreItems(p);
 							p.openInventory(Menus.getStores().get(p));

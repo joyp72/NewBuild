@@ -1,6 +1,8 @@
 package com.likeapig.build.arena;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -51,8 +53,8 @@ public class MegaData {
 
 	public MegaData() {
 	}
-	
-	//coins
+
+	// coins
 
 	public static int getCoins(String name) {
 
@@ -70,9 +72,9 @@ public class MegaData {
 		setCoinsData(name, coins);
 	}
 
-	public static void addCoins(String name) {
+	public static void addCoins(String name, int i) {
 		int coins = getCoins(name);
-		int fcoins = coins + 1;
+		int fcoins = coins + i;
 		setCoinsData(name, fcoins);
 	}
 
@@ -96,8 +98,8 @@ public class MegaData {
 	public Plugin getPlugin() {
 		return plugin;
 	}
-	
-	//words guessed
+
+	// words guessed
 
 	public static int getGC(String name) {
 
@@ -137,9 +139,9 @@ public class MegaData {
 	public static boolean containsGCPlayer(String name) {
 		return coinsConfig.contains(name + guessedcorrect);
 	}
-	
-	//games played
-	
+
+	// games played
+
 	public static int getRW(String name) {
 
 		if (!containsRWPlayer(name)) {
@@ -178,9 +180,9 @@ public class MegaData {
 	public static boolean containsRWPlayer(String name) {
 		return coinsConfig.contains(name + roundswon);
 	}
-	
-	//games won
-	
+
+	// games won
+
 	public static int getGW(String name) {
 
 		if (!containsGWPlayer(name)) {
@@ -219,39 +221,25 @@ public class MegaData {
 	public static boolean containsGWPlayer(String name) {
 		return coinsConfig.contains(name + gameswon);
 	}
-	
-	//halo
-	
-	public static boolean getHalo(String name) {
-		if (!(containsHaloPlayer(name))) {
-			setHaloData(name, false);
-		}
-		
-		boolean bo = getHaloData(name);
-		return bo;
-	}
-	
-	public static void setHalo(String name, boolean b) {
-		boolean bo = getHaloData(name);
-		bo = b;
-		setHaloData(name, bo);
-	}
-	
-	public static boolean getHaloData(String path) {
-		return MegaData.coinsConfig.getBoolean(path + halo);
-	}
-	
-	public static void setHaloData(String path, Object value) {
-		MegaData.coinsConfig.set(path + halo, value);
-		try {
-			MegaData.coinsConfig.save(coinsFile);
-		} catch (Exception e) {
-			e.printStackTrace();
+
+	// halo
+
+	public List<String> getPurchased(String name) {
+		if (coinsConfig.get(name + ".purchased") != null) {
+			return coinsConfig.getStringList(name + ".purchased");
+		} else {
+			return new ArrayList<String>();
 		}
 	}
-	
-	public static boolean containsHaloPlayer(String name) {
-		return coinsConfig.contains(name + halo);
+
+	public void addPurchased(String name, String item) {
+		List<String> items = getPurchased(name);
+		items.add(item);
+		setPurchased(name, items);
+	}
+
+	public void setPurchased(String name, List<String> items) {
+		coinsConfig.set(name + ".purchased", items);
 	}
 
 }

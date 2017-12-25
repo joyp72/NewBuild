@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -21,6 +22,7 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
@@ -74,6 +76,25 @@ public class ArenaListener implements Listener {
 		final Player p = e.getPlayer();
 		if (ArenaManager.get().getArena(p) != null) {
 			ArenaManager.get().getArena(p).kickPlayer(p);
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent e) {
+		Player p = e.getPlayer();
+		Arena a = ArenaManager.get().getArena(p);
+		if (a != null) {
+			if (p.getItemInHand().getType() == Material.WATER_BUCKET || p.getItemInHand().getType() == Material.LAVA_BUCKET || p.getItemInHand().getType() == Material.TNT || p.getItemInHand().getType() == Material.FLINT_AND_STEEL || p.getItemInHand().getType() == Material.BOW || p.getItemInHand().getType() == Material.MONSTER_EGG || p.getItemInHand().getType() == Material.SIGN_POST || p.getItemInHand().getType() == Material.WALL_SIGN) {
+				e.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onBlockDispense(BlockDispenseEvent e) {
+		Block dis = e.getBlock();
+		if (getLocation().contains(dis.getLocation())) {
+			e.setCancelled(true);
 		}
 	}
 

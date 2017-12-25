@@ -44,7 +44,7 @@ public class Arena {
 
 	public Arena(String name, Location location) {
 		state = ArenaState.STOPPED;
-		minPlayers = 4;
+		minPlayers = 3;
 		maxPlayers = 12;
 		wordGuessed = false;
 		datas = new ArrayList<Data>();
@@ -81,7 +81,7 @@ public class Arena {
 			}
 		}, 0L, 0L);
 	}
-	
+
 	public void disableParticles() {
 		Bukkit.getServer().getScheduler().cancelTask(id);
 	}
@@ -133,7 +133,13 @@ public class Arena {
 			enableParticles();
 			message(ChatColor.GREEN + p.getName() + " joined the arena!");
 			if (state.equals(ArenaState.WAITING) && getNumberOfPlayer() == minPlayers) {
-				start();
+				Timer.get().createTimer(getArena(), "start", 30).startTimer(getArena(), "start");
+				message("Game will start in 30 seconds!");
+				for (Player pl : Bukkit.getOnlinePlayers()) {
+					if (!getPlayers().contains(pl)) {
+						MessageManager.get().message(pl, "A MegaBuild game is starting soon, join using /b!");
+					}
+				}
 			}
 			Titles.get().addTitle(p, "§6§lYou have joined " + getName().toUpperCase());
 			ActionBars.get().addActionBar(p, "§e§lScore: " + d.getScore());
@@ -172,6 +178,9 @@ public class Arena {
 			message(ChatColor.RED + "Round has ended.");
 			endRound();
 		}
+		if (arg.equalsIgnoreCase("start")) {
+			start();
+		}
 	}
 
 	public void endRound() {
@@ -183,7 +192,7 @@ public class Arena {
 			public void run() {
 				startNewRound();
 			}
-		}, 1L);
+		}, 40L);
 	}
 
 	public void onTimerTick(String arg, int timer) {
@@ -196,6 +205,12 @@ public class Arena {
 				for (Player p : getPlayers()) {
 					ActionBars.get().addActionBar(p, "§c§lTime left: " + countdown);
 				}
+			}
+		}
+		if (arg.equalsIgnoreCase("start")) {
+			countdown = timer;
+			for (Player p : getPlayers()) {
+				ScoreBoard.get().updateSB(p);
 			}
 		}
 	}
@@ -266,15 +281,15 @@ public class Arena {
 	private void onWordGuessed(Data d) {
 		if (!wordGuessed) {
 			wordGuessed = true;
-			message(ChatColor.GREEN + d.getPlayer().getName() + " Guessed the word!");
-			MessageManager.get().message(d.getPlayer(), "You are the first to guess correct! (+3)", MessageType.GOOD);
+			message(ChatColor.GRAY + d.getPlayer().getName() + " Guessed the word!");
+			MessageManager.get().message(d.getPlayer(), "+3 Score", MessageType.GOOD);
 			d.increaseScore(3);
 			MegaData.addGC(d.getPlayer().getName(), 1);
 			getData(builder).increaseScore(2);
-			MessageManager.get().message(builder, "Someone guessed correct! (+2)", MessageType.GOOD);
+			MessageManager.get().message(builder, "+2 Score", MessageType.GOOD);
 		} else {
 			message(ChatColor.GREEN + d.getPlayer().getName() + " Guessed the word!");
-			MessageManager.get().message(d.getPlayer(), "You guessed correct! (+1)", MessageType.GOOD);
+			MessageManager.get().message(d.getPlayer(), "+1", MessageType.GOOD);
 			d.increaseScore(1);
 			MegaData.addGC(d.getPlayer().getName(), 1);
 		}
@@ -349,7 +364,7 @@ public class Arena {
 					winners.add(p2);
 				} else {
 					if (p2.getScore() != winners.get(0).getScore()) {
-						MegaData.addCoins(winners.get(0).getPlayer().getName());
+						MegaData.addCoins(winners.get(0).getPlayer().getName(), 1);
 						MessageManager.get().message(p2.getPlayer(),
 								ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
 						continue;
@@ -369,7 +384,7 @@ public class Arena {
 					} else {
 						s = String.valueOf(s) + ", " + d.getPlayer().getName() + " (" + d.getScore() + ")";
 					}
-					MegaData.setCoins(d.getPlayer().getName(), 5);
+					MegaData.addCoins(d.getPlayer().getName(), 5);
 					MegaData.addGW(d.getPlayer().getName(), 1);
 					MessageManager.get().message(d.getPlayer(),
 							ChatColor.BLUE + "§lYou gained 5 MegaCoins, check your stats!");
@@ -397,7 +412,7 @@ public class Arena {
 					Titles.get().addSubTitle(p, "§6Winner: " + winners.get(0).getPlayer().getName() + " ("
 							+ winners.get(0).getScore() + ")");
 				}
-				MegaData.setCoins(winners.get(0).getPlayer().getName(), 5);
+				MegaData.addCoins(winners.get(0).getPlayer().getName(), 5);
 				MegaData.addGW(winners.get(0).getPlayer().getName(), 1);
 				MessageManager.get().message(winners.get(0).getPlayer(),
 						ChatColor.BLUE + "§lYou gained 5 MegaCoins, check your stats!");

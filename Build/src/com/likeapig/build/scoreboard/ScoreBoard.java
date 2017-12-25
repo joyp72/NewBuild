@@ -50,26 +50,40 @@ public class ScoreBoard {
 					main.setDisplaySlot(DisplaySlot.SIDEBAR);
 					main.setDisplayName(ChatColor.DARK_AQUA + "Mega" + ChatColor.AQUA + "Build");
 
-					Score timer = main.getScore(ChatColor.WHITE + "" + ChatColor.BOLD + "Timer" + ChatColor.RESET + "" + ChatColor.WHITE + ": " + m.getCountdown());
+					Score timer = main.getScore(ChatColor.WHITE + "" + ChatColor.BOLD + "Timer" + ChatColor.RESET + ""
+							+ ChatColor.WHITE + ": " + m.getCountdown());
 					timer.setScore(i);
 					i--;
+
+					Score build = main.getScore(ChatColor.WHITE + "" + ChatColor.BOLD + "Builder" + ChatColor.RESET + ""
+							+ ChatColor.WHITE + ": ");
+					build.setScore(i);
+					i--;
+
+					if (m.getBuilder() != null) {
+						Score builder = main.getScore(ChatColor.GRAY + m.getBuilder().getName());
+						builder.setScore(i);
+						i--;
+					}
 
 					Score blank2 = main.getScore("  ");
 					blank2.setScore(i);
 					i--;
-					
-					Score abilities = main.getScore(ChatColor.WHITE + "" + ChatColor.BOLD + "Players" + ChatColor.RESET + "" + ChatColor.WHITE + ":");
+
+					Score abilities = main.getScore(ChatColor.WHITE + "" + ChatColor.BOLD + "Players" + ChatColor.RESET
+							+ "" + ChatColor.WHITE + ":");
 					abilities.setScore(i);
 					i--;
-					
+
 					for (Data data : m.getDatas()) {
 						String name = data.getPlayer().getName();
 						int score = data.getScore();
-						Score player = main.getScore(ChatColor.WHITE + Integer.toString(score) + " " + ChatColor.GRAY + name);
+						Score player = main
+								.getScore(ChatColor.WHITE + Integer.toString(score) + " " + ChatColor.GRAY + name);
 						player.setScore(i);
 						i--;
 					}
-					
+
 					p.setScoreboard(board);
 					i = 20;
 				}

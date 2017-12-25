@@ -79,25 +79,77 @@ public class StoreItems {
 			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Halo" + ChatColor.RESET + "" + ChatColor.GRAY
 					+ " - Particle Effect");
 			ArrayList<String> lore = new ArrayList<>();
-			if (!MegaData.getHalo(p.getName())) {
+			if (!MegaData.get().getPurchased(p.getName()).contains("halo")) {
 				lore.add(ChatColor.GRAY + "(Click to purchase)");
 			}
-			if (MegaData.getHalo(p.getName()) && active.get(p).getName() != "halo") {
+			if (MegaData.get().getPurchased(p.getName()).contains("halo") && active.get(p).getName() != "halo") {
 				lore.add(ChatColor.GRAY + "(Click to activate)");
 			}
-			if (MegaData.getHalo(p.getName()) && active.get(p).getName() == "halo") {
+			if (MegaData.get().getPurchased(p.getName()).contains("halo") && active.get(p).getName() == "halo") {
 				lore.add(ChatColor.GRAY + "(Already activated)");
 			}
 			lore.add(" ");
-			lore.add(ChatColor.WHITE + "Cost: " + ChatColor.GRAY + "50 " + ChatColor.YELLOW + "MegaCoins");
+			lore.add(ChatColor.WHITE + "Cost: " + ChatColor.GRAY + "20 " + ChatColor.YELLOW + "MegaCoins");
 			lore.add(ChatColor.WHITE + "Desc: " + ChatColor.GRAY + "A circle that appears above your head");
 			meta.addItemFlags(ItemFlag.values());
 			meta.setLore(lore);
 			halo.setItemMeta(meta);
-			if (MegaData.getHalo(p.getName()) && active.get(p).getName() == "halo") {
+			if (MegaData.get().getPurchased(p.getName()).contains("halo") && active.get(p).getName() == "halo") {
 				halo.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
 			}
 			si.setItem(11, halo);
+		}
+		
+		ItemStack santaHat = new ItemStack(Material.REDSTONE);
+		{
+			ItemMeta meta = santaHat.getItemMeta();
+			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Santa Hat" + ChatColor.RESET + "" + ChatColor.GRAY + " - Particle Effect");
+			ArrayList<String> lore = new ArrayList<>();
+			if (!MegaData.get().getPurchased(p.getName()).contains("santaHat")) {
+				lore.add(ChatColor.GRAY + "(Click to purchase)");
+			}
+			if (MegaData.get().getPurchased(p.getName()).contains("santaHat") && active.get(p).getName() != "santaHat") {
+				lore.add(ChatColor.GRAY + "(Click to activate)");
+			}
+			if (MegaData.get().getPurchased(p.getName()).contains("santaHat") && active.get(p).getName() == "santaHat") {
+				lore.add(ChatColor.GRAY + "(Already activated)");
+			}
+			lore.add(" ");
+			lore.add(ChatColor.WHITE + "Cost: " + ChatColor.GRAY + "35 " + ChatColor.YELLOW + "MegaCoins");
+			lore.add(ChatColor.WHITE + "Desc: " + ChatColor.GRAY + "Santa Hat that appear on your head");
+			meta.addItemFlags(ItemFlag.values());
+			meta.setLore(lore);
+			santaHat.setItemMeta(meta);
+			if (MegaData.get().getPurchased(p.getName()).contains("santaHat") && active.get(p).getName() == "santaHat") {
+				santaHat.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
+			}
+			si.setItem(12, santaHat);
+		}
+		
+		ItemStack wings = new ItemStack(Material.FEATHER);
+		{
+			ItemMeta meta = wings.getItemMeta();
+			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Wings" + ChatColor.RESET + "" + ChatColor.GRAY + " - Particle Effect");
+			ArrayList<String> lore = new ArrayList<>();
+			if (!MegaData.get().getPurchased(p.getName()).contains("wings")) {
+				lore.add(ChatColor.GRAY + "(Click to purchase)");
+			}
+			if (MegaData.get().getPurchased(p.getName()).contains("wings") && active.get(p).getName() != "wings") {
+				lore.add(ChatColor.GRAY + "(Click to activate)");
+			}
+			if (MegaData.get().getPurchased(p.getName()).contains("wings") && active.get(p).getName() == "wings") {
+				lore.add(ChatColor.GRAY + "(Already activated)");
+			}
+			lore.add(" ");
+			lore.add(ChatColor.WHITE + "Cost: " + ChatColor.GRAY + "50 " + ChatColor.YELLOW + "MegaCoins");
+			lore.add(ChatColor.WHITE + "Desc: " + ChatColor.GRAY + "Pair of wings that appear on your back");
+			meta.addItemFlags(ItemFlag.values());
+			meta.setLore(lore);
+			wings.setItemMeta(meta);
+			if (MegaData.get().getPurchased(p.getName()).contains("wings") && active.get(p).getName() == "wings") {
+				wings.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
+			}
+			si.setItem(13, wings);
 		}
 
 		ItemStack more = new ItemStack(Material.SIGN);
