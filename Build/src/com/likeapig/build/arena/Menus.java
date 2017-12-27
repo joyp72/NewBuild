@@ -19,36 +19,15 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Menus {
 
-	// private static Inventory ai;
-	// private static Inventory mi;
-	// private static Inventory si;
 	private int size = 9;
 	private int slot = 0;
-	private String bm = "Arenas";
 	private String mm = "Main Menu";
 	private String sm = "Store";
 	private static HashMap<Player, Inventory> menus = new HashMap<Player, Inventory>();
-	private static HashMap<Player, Inventory> arenas = new HashMap<Player, Inventory>();
 	private static HashMap<Player, Inventory> stores = new HashMap<Player, Inventory>();
-
-	// public static Inventory getInvArenas() {
-	// return ai;
-	// }
-
-	// public static Inventory getInvMain() {
-	// return mi;
-	// }
-
-	// public static Inventory getInvStore() {
-	// return si;
-	// }
 
 	public static HashMap<Player, Inventory> getMenus() {
 		return menus;
-	}
-
-	public static HashMap<Player, Inventory> getArenas() {
-		return arenas;
 	}
 
 	public static HashMap<Player, Inventory> getStores() {
@@ -59,47 +38,25 @@ public class Menus {
 		if (menus.get(p) != null) {
 			menus.remove(p);
 		}
-		if (arenas.get(p) != null) {
-			arenas.remove(p);
-		}
 		if (stores.get(p) != null) {
 			stores.remove(p);
 		}
 	}
 
 	public static boolean containsInv(Inventory i) {
-		return menus.containsValue(i) || arenas.containsValue(i) || stores.containsValue(i);
+		return menus.containsValue(i) || stores.containsValue(i);
 	}
 
 	private final static int CENTER_PX = 34 * 3;
 
 	public Menus(Player p) {
-		// ai = Bukkit.createInventory(p, size, bm);
-		// mi = Bukkit.createInventory(p, size, mm);
-		// si = Bukkit.createInventory(p, 45, sm);
 		Inventory mi = Bukkit.createInventory(p, size, mm);
 		if (menus.get(p) == null) {
 			menus.put(p, mi);
 		}
-		Inventory ai = Bukkit.createInventory(p, size, mm);
-		if (arenas.get(p) == null) {
-			arenas.put(p, ai);
-		}
-		Inventory si = Bukkit.createInventory(p, 45, mm);
+		Inventory si = Bukkit.createInventory(p, 45, sm);
 		if (stores.get(p) == null) {
 			stores.put(p, si);
-		}
-
-		ItemStack arenas = new ItemStack(Material.WORKBENCH);
-		{
-			ItemMeta meta = arenas.getItemMeta();
-			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Arenas");
-			ArrayList<String> lore = new ArrayList<>();
-			lore.add(ChatColor.GRAY + "Click to view arenas");
-			lore.add(" ");
-			meta.setLore(lore);
-			arenas.setItemMeta(meta);
-			mi.setItem(7, arenas);
 		}
 
 		ItemStack store = new ItemStack(Material.CHEST);
@@ -195,8 +152,9 @@ public class Menus {
 		}
 
 		if (ArenaManager.get().getArenas().size() > 0) {
-			for (Arena a : ArenaManager.get().getArenas()) {
-				if (slot < 9) {
+			if (ArenaManager.get().getArena(p) == null) {
+				if (ArenaManager.get().getArena("Arena") != null) {
+					Arena a = ArenaManager.get().getArena("Arena");
 					if (a.getState().equals(ArenaState.WAITING)) {
 						int num = a.getPlayers().size();
 						if (num > 1) {
@@ -211,8 +169,7 @@ public class Menus {
 								lore.add(ChatColor.GRAY + "Players: " + a.getPlayers().size() + "/12");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
-								ai.setItem(slot, item);
-								slot++;
+								mi.setItem(7, item);
 							}
 						} else {
 							ItemStack item = new ItemStack(Material.CONCRETE, 1, (byte) 5);
@@ -227,8 +184,7 @@ public class Menus {
 								meta.setLore(lore);
 								item.setItemMeta(meta);
 							}
-							ai.setItem(slot, item);
-							slot++;
+							mi.setItem(7, item);
 						}
 					}
 					if (a.isStarted()) {
@@ -244,8 +200,7 @@ public class Menus {
 								lore.add(ChatColor.GRAY + "Players: " + a.getPlayers().size() + "/12");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
-								ai.setItem(slot, item);
-								slot++;
+								mi.setItem(7, item);
 							}
 						} else {
 							ItemStack item = new ItemStack(Material.CONCRETE, 1, (byte) 14);
@@ -258,50 +213,31 @@ public class Menus {
 								lore.add(ChatColor.GRAY + "Players: " + a.getPlayers().size() + "/12");
 								meta.setLore(lore);
 								item.setItemMeta(meta);
-								ai.setItem(slot, item);
-								slot++;
+								mi.setItem(7, item);
 							}
 						}
 					}
 				}
-			}
-		}
-
-		Arena pa = ArenaManager.get().getArena(p);
-
-		if (pa == null) {
-			ItemStack back = new ItemStack(Material.BEDROCK);
-			{
-				ItemMeta meta = back.getItemMeta();
-				meta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Back to Menu");
-				ArrayList<String> lore = new ArrayList<>();
-				lore.add(ChatColor.GRAY + "Click to go back to Menu");
-				meta.setLore(lore);
-				back.setItemMeta(meta);
-			}
-			ai.setItem(8, back);
-		}
-
-		if (pa != null) {
-			if (ArenaManager.get().getArenas().size() > 0) {
-				ItemStack item = new ItemStack(Material.BEDROCK);
-				{
-					ItemMeta meta = item.getItemMeta();
-					meta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Leave");
-					ArrayList<String> lore = new ArrayList<>();
-					Arena a = ArenaManager.get().getArena(p);
-					if (a == null) {
-						lore.add(ChatColor.GRAY + "You are not in an arena!");
-					} else {
-						lore.add(ChatColor.GRAY + "Click to leave arena");
+			} else {
+				if (ArenaManager.get().getArenas().size() > 0) {
+					ItemStack item = new ItemStack(Material.BEDROCK);
+					{
+						ItemMeta meta = item.getItemMeta();
+						meta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Leave");
+						ArrayList<String> lore = new ArrayList<>();
+						Arena a = ArenaManager.get().getArena(p);
+						if (a == null) {
+							lore.add(ChatColor.GRAY + "You are not in an arena!");
+						} else {
+							lore.add(ChatColor.GRAY + "Click to leave arena");
+						}
+						meta.setLore(lore);
+						item.setItemMeta(meta);
 					}
-					meta.setLore(lore);
-					item.setItemMeta(meta);
+					mi.setItem(7, item);
 				}
-				ai.setItem(8, item);
 			}
 		}
-
 	}
 
 	public static String[] formatLore(String text, int size, org.bukkit.ChatColor color) {

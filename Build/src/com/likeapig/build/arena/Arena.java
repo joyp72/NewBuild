@@ -151,6 +151,9 @@ public class Arena {
 
 	public void removePlayer(Player p) {
 		if (containsPlayer(p)) {
+			if (builder == p) {
+				endRound();
+			}
 			Data d = getData(p);
 			d.restore();
 			datas.remove(d);
@@ -190,12 +193,16 @@ public class Arena {
 		countdown = 0;
 		for (Player pl : getPlayers()) {
 			Titles.get().addTitle(pl, " ");
-			Titles.get().addSubTitle(pl, ChatColor.WHITE + "The word was " + ChatColor.GREEN + word + ChatColor.WHITE + ".");
+			Titles.get().addSubTitle(pl,
+					ChatColor.WHITE + "The word was " + ChatColor.GREEN + word + ChatColor.WHITE + ".");
 		}
 		usedWords.remove(word);
+
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
 			public void run() {
-				startNewRound();
+				if (getPlayers().size() > 0) {
+					startNewRound();
+				}
 			}
 		}, 120L);
 	}
@@ -309,6 +316,7 @@ public class Arena {
 			if (p != builder && !getData(p).guessedWord()) {
 				f = false;
 			}
+			ScoreBoard.get().updateSB(p);
 		}
 		if (f) {
 			message(ChatColor.GREEN + "Everyone has guessed the word!");
@@ -374,12 +382,15 @@ public class Arena {
 					winners.add(p2);
 				} else {
 					if (p2.getScore() != winners.get(0).getScore()) {
-						MegaData.addCoins(winners.get(0).getPlayer().getName(), 1);
-						MessageManager.get().message(p2.getPlayer(),
-								ChatColor.BLUE + "§lYou gained a MegaCoin, check your stats!");
 						continue;
 					}
 					winners.add(p2);
+				}
+			}
+			for (Data da : datas) {
+				if (!winners.contains(da)) {
+					MegaData.addCoins(da.getPlayer().getName(), 1);
+					MessageManager.get().message(da.getPlayer(), ChatColor.BLUE + "§lYou gained a MegaCoin!");
 				}
 			}
 			message(ChatColor.GOLD + "GAME OVER");
@@ -396,8 +407,7 @@ public class Arena {
 					}
 					MegaData.addCoins(d.getPlayer().getName(), 5);
 					MegaData.addGW(d.getPlayer().getName(), 1);
-					MessageManager.get().message(d.getPlayer(),
-							ChatColor.BLUE + "§lYou gained 5 MegaCoins, check your stats!");
+					MessageManager.get().message(d.getPlayer(), ChatColor.BLUE + "§lYou gained 5 MegaCoins!");
 				}
 				message(s);
 				for (Player p : getPlayers()) {
@@ -424,8 +434,7 @@ public class Arena {
 				}
 				MegaData.addCoins(winners.get(0).getPlayer().getName(), 5);
 				MegaData.addGW(winners.get(0).getPlayer().getName(), 1);
-				MessageManager.get().message(winners.get(0).getPlayer(),
-						ChatColor.BLUE + "§lYou gained 5 MegaCoins, check your stats!");
+				MessageManager.get().message(winners.get(0).getPlayer(), ChatColor.BLUE + "§lYou gained 5 MegaCoins!");
 				firework(getSpawn());
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Build.getInstance(), new Runnable() {
 					public void run() {

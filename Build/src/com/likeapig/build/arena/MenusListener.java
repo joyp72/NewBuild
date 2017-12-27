@@ -42,11 +42,50 @@ public class MenusListener implements Listener {
 				if (e.getCurrentItem() == null) {
 					return;
 				}
-				if (e.getCurrentItem().getType() == Material.WORKBENCH) {
-					e.setCancelled(true);
-					if (e.getWhoClicked() instanceof Player) {
-						Player p = (Player) e.getWhoClicked();
-						p.openInventory(Menus.getArenas().get(p));
+				if (e.getCurrentItem().getType() == Material.CONCRETE) {
+					String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+					final String id = name;
+					final Arena a2 = ArenaManager.get().getArena(id);
+					if (a2 != null) {
+						if (e.getWhoClicked() instanceof Player) {
+							Player p = (Player) e.getWhoClicked();
+							p.closeInventory();
+							final Arena a = ArenaManager.get().getArena(p);
+							if (a != null) {
+								MessageManager.get().message(p, "You are already in an arena",
+										MessageManager.MessageType.BAD);
+								return;
+							}
+							if (a2.getLobby() == null) {
+								MessageManager.get().message(p, a2.getName() + " doesn't have a lobby set!",
+										MessageType.BAD);
+								return;
+							}
+							if (a2.isStarted()) {
+								MessageManager.get().message(p, "Arena has started!", MessageType.BAD);
+								return;
+							}
+							a2.addPlayer(p);
+						}
+					}
+				}
+				if (e.getCurrentItem().getType() == Material.BEDROCK) {
+					if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())
+							.equalsIgnoreCase("Leave")) {
+						String dName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+						if (dName.equalsIgnoreCase("leave")) {
+							if (e.getWhoClicked() instanceof Player) {
+								Player p = (Player) e.getWhoClicked();
+								p.closeInventory();
+								final Arena a = ArenaManager.get().getArena(p);
+								if (a == null) {
+									MessageManager.get().message(p, "You are not in an arena!",
+											MessageManager.MessageType.BAD);
+									return;
+								}
+								a.kickPlayer(p);
+							}
+						}
 					}
 				}
 				if (e.getCurrentItem().getType() == Material.SKULL_ITEM
@@ -176,81 +215,6 @@ public class MenusListener implements Listener {
 							|| e.getCurrentItem().getType() == Material.DOUBLE_PLANT
 							|| e.getCurrentItem().getType() == Material.SIGN) {
 						e.setCancelled(true);
-					}
-				}
-			}
-		}
-
-		// Arenas
-		if (Menus.getArenas() != null) {
-			if (Menus.getArenas().containsValue(e.getInventory())) {
-				if (e.getCurrentItem() == null) {
-					return;
-				}
-				if (e.getCurrentItem().getType() == Material.CONCRETE) {
-					for (Arena an : ArenaManager.get().getArenas()) {
-						if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())
-								.equalsIgnoreCase(an.getName())) {
-							e.setCancelled(true);
-							String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-
-							if (e.getWhoClicked() instanceof Player) {
-								Player p = (Player) e.getWhoClicked();
-								p.closeInventory();
-								final Arena a = ArenaManager.get().getArena(p);
-								if (a != null) {
-									MessageManager.get().message(p, "You are already in an arena",
-											MessageManager.MessageType.BAD);
-									return;
-								}
-								final String id = name;
-								final Arena a2 = ArenaManager.get().getArena(id);
-								if (a2 == null) {
-									MessageManager.get().message(p, "Unknown arena", MessageManager.MessageType.BAD);
-									return;
-								}
-								if (a2.getLobby() == null) {
-									MessageManager.get().message(p, a2.getName() + " doesn't have a lobby set!",
-											MessageType.BAD);
-									return;
-								}
-								if (a2.isStarted()) {
-									MessageManager.get().message(p, "Arena has started!", MessageType.BAD);
-									return;
-								}
-								a2.addPlayer(p);
-
-							}
-						}
-					}
-				}
-				if (e.getCurrentItem().getType() == Material.BEDROCK) {
-					if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())
-							.equalsIgnoreCase("Leave")) {
-						String dName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-						if (dName.equalsIgnoreCase("leave")) {
-							if (e.getWhoClicked() instanceof Player) {
-								Player p = (Player) e.getWhoClicked();
-								p.closeInventory();
-								final Arena a = ArenaManager.get().getArena(p);
-								if (a == null) {
-									MessageManager.get().message(p, "You are not in an arena!",
-											MessageManager.MessageType.BAD);
-									return;
-								}
-								a.kickPlayer(p);
-							}
-						}
-					}
-					if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())
-							.equalsIgnoreCase("Back to Menu")) {
-						String dName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-						if (dName.equalsIgnoreCase("back to menu")) {
-							if (e.getWhoClicked() instanceof Player) {
-								Player p = (Player) e.getWhoClicked();
-								p.openInventory(Menus.getMenus().get(p));
-							}
-						}
 					}
 				}
 			}

@@ -1,5 +1,10 @@
 package com.likeapig.build.scoreboard;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -75,14 +80,45 @@ public class ScoreBoard {
 					abilities.setScore(i);
 					i--;
 
+					List<Integer> scores = new ArrayList<Integer>();
+					List<Data> temp = new ArrayList<Data>();
 					for (Data data : m.getDatas()) {
-						String name = data.getPlayer().getName();
 						int score = data.getScore();
-						Score player = main
-								.getScore(ChatColor.WHITE + Integer.toString(score) + " " + ChatColor.GRAY + name);
-						player.setScore(i);
-						i--;
+						scores.add(score);
+						temp.add(data);
 					}
+					Collections.reverse(scores);
+					for (int i : scores) {
+						for (Data d : m.getDatas()) {
+							if (temp.contains(d)) {
+								if (d.getScore() == i) {
+									String name = d.getPlayer().getName();
+									int score = d.getScore();
+									if (!d.guessedWord()) {
+										Score player = main.getScore(ChatColor.WHITE + Integer.toString(score) + " "
+												+ ChatColor.GRAY + name);
+										player.setScore(i);
+										i--;
+									} else {
+										Score player = main.getScore(ChatColor.WHITE + Integer.toString(score) + " "
+												+ ChatColor.GREEN + name);
+										player.setScore(i);
+										i--;
+									}
+									temp.remove(d);
+								}
+							}
+						}
+					}
+					// for (Data data : m.getDatas()) {
+					// String name = data.getPlayer().getName();
+					// int score = data.getScore();
+					// Score player = main
+					// .getScore(ChatColor.WHITE + Integer.toString(score) + " " + ChatColor.GRAY +
+					// name);
+					// player.setScore(i);
+					// i--;
+					// }
 
 					p.setScoreboard(board);
 					i = 20;

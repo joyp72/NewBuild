@@ -73,7 +73,7 @@ public class Data
         this.guessedWord = b;
     }
     
-    protected boolean guessedWord() {
+    public boolean guessedWord() {
         return this.guessedWord;
     }
     
