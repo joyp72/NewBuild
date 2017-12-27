@@ -43,6 +43,7 @@ public class MenusListener implements Listener {
 					return;
 				}
 				if (e.getCurrentItem().getType() == Material.CONCRETE) {
+					e.setCancelled(true);
 					String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
 					final String id = name;
 					final Arena a2 = ArenaManager.get().getArena(id);
@@ -70,6 +71,7 @@ public class MenusListener implements Listener {
 					}
 				}
 				if (e.getCurrentItem().getType() == Material.BEDROCK) {
+					e.setCancelled(true);
 					if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName())
 							.equalsIgnoreCase("Leave")) {
 						String dName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
