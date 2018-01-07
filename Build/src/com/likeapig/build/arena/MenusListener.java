@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.likeapig.build.Build;
 import com.likeapig.build.commands.MessageManager;
@@ -31,6 +31,17 @@ public class MenusListener implements Listener {
 
 	public void setup() {
 		Bukkit.getPluginManager().registerEvents(this, Build.getInstance());
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
+		int coins = MegaData.getCoins(p.getName());
+		if (coins > 0) {
+			main.MegaData.addMegaCoins(p, coins);
+			MegaData.setCoins(p.getName(), 0);
+			return;
+		}
 	}
 
 	@EventHandler
@@ -120,7 +131,7 @@ public class MenusListener implements Listener {
 				if (e.getWhoClicked() instanceof Player) {
 					Player p = (Player) e.getWhoClicked();
 					String name = p.getName();
-					int coins = MegaData.getCoins(name);
+					int coins = main.MegaData.getMegaCoins(p);
 
 					if (e.getCurrentItem().getType() == Material.PAPER) {
 						e.setCancelled(true);
@@ -137,7 +148,7 @@ public class MenusListener implements Listener {
 						List<String> purchased = MegaData.get().getPurchased(p.getName());
 						if (coins >= 20 && !purchased.contains("halo")) {
 							MegaData.get().addPurchased(p.getName(), "halo");
-							MegaData.setCoins(name, coins - 20);
+							main.MegaData.spendMegaCoins(p, 20);
 							MessageManager.get().message(p, "Successfully bought Halo effect!", MessageType.GOOD);
 							StoreItems.setActivatedString(p, "halo");
 							p.getOpenInventory().close();
@@ -160,7 +171,7 @@ public class MenusListener implements Listener {
 						List<String> purchased = MegaData.get().getPurchased(p.getName());
 						if (coins >= 35 && !purchased.contains("santaHat")) {
 							MegaData.get().addPurchased(p.getName(), "santaHat");
-							MegaData.setCoins(name, coins - 20);
+							main.MegaData.spendMegaCoins(p, 35);
 							MessageManager.get().message(p, "Successfully bought Santa Hat effect!", MessageType.GOOD);
 							StoreItems.setActivatedString(p, "santaHat");
 							p.getOpenInventory().close();
@@ -183,7 +194,7 @@ public class MenusListener implements Listener {
 						List<String> purchased = MegaData.get().getPurchased(p.getName());
 						if (coins >= 50 && !purchased.contains("wings")) {
 							MegaData.get().addPurchased(p.getName(), "wings");
-							MegaData.setCoins(name, coins - 20);
+							main.MegaData.spendMegaCoins(p, 50);
 							MessageManager.get().message(p, "Successfully bought Wings effect!", MessageType.GOOD);
 							StoreItems.setActivatedString(p, "wings");
 							p.getOpenInventory().close();

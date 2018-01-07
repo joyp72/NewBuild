@@ -89,7 +89,7 @@ public class Menus {
 			lore.add(ChatColor.GREEN + "Games Won: " + ChatColor.GRAY + MegaData.getGW(p.getName()));
 			lore.add(ChatColor.GREEN + "Guessed Correct: " + ChatColor.GRAY + MegaData.getGC(p.getName()));
 			lore.add(" ");
-			lore.add(ChatColor.YELLOW + "MegaCoins: " + ChatColor.GRAY + MegaData.getCoins(p.getName()));
+			lore.add(ChatColor.YELLOW + "MegaCoins: " + ChatColor.GRAY + main.MegaData.getMegaCoins(p));
 			hmeta.setLore(lore);
 			head.setItemMeta(hmeta);
 			mi.setItem(1, head);

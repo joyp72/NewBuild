@@ -99,19 +99,22 @@ public class StoreItems {
 			}
 			si.setItem(11, halo);
 		}
-		
+
 		ItemStack santaHat = new ItemStack(Material.REDSTONE);
 		{
 			ItemMeta meta = santaHat.getItemMeta();
-			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Santa Hat" + ChatColor.RESET + "" + ChatColor.GRAY + " - Particle Effect");
+			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Santa Hat" + ChatColor.RESET + ""
+					+ ChatColor.GRAY + " - Particle Effect");
 			ArrayList<String> lore = new ArrayList<>();
 			if (!MegaData.get().getPurchased(p.getName()).contains("santaHat")) {
 				lore.add(ChatColor.GRAY + "(Click to purchase)");
 			}
-			if (MegaData.get().getPurchased(p.getName()).contains("santaHat") && active.get(p).getName() != "santaHat") {
+			if (MegaData.get().getPurchased(p.getName()).contains("santaHat")
+					&& active.get(p).getName() != "santaHat") {
 				lore.add(ChatColor.GRAY + "(Click to activate)");
 			}
-			if (MegaData.get().getPurchased(p.getName()).contains("santaHat") && active.get(p).getName() == "santaHat") {
+			if (MegaData.get().getPurchased(p.getName()).contains("santaHat")
+					&& active.get(p).getName() == "santaHat") {
 				lore.add(ChatColor.GRAY + "(Already activated)");
 			}
 			lore.add(" ");
@@ -120,16 +123,18 @@ public class StoreItems {
 			meta.addItemFlags(ItemFlag.values());
 			meta.setLore(lore);
 			santaHat.setItemMeta(meta);
-			if (MegaData.get().getPurchased(p.getName()).contains("santaHat") && active.get(p).getName() == "santaHat") {
+			if (MegaData.get().getPurchased(p.getName()).contains("santaHat")
+					&& active.get(p).getName() == "santaHat") {
 				santaHat.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 2);
 			}
 			si.setItem(12, santaHat);
 		}
-		
+
 		ItemStack wings = new ItemStack(Material.FEATHER);
 		{
 			ItemMeta meta = wings.getItemMeta();
-			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Wings" + ChatColor.RESET + "" + ChatColor.GRAY + " - Particle Effect");
+			meta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Wings" + ChatColor.RESET + "" + ChatColor.GRAY
+					+ " - Particle Effect");
 			ArrayList<String> lore = new ArrayList<>();
 			if (!MegaData.get().getPurchased(p.getName()).contains("wings")) {
 				lore.add(ChatColor.GRAY + "(Click to purchase)");
@@ -197,7 +202,7 @@ public class StoreItems {
 		ItemStack balance = new ItemStack(Material.DOUBLE_PLANT, 1, (short) 0);
 		{
 			ItemMeta meta = balance.getItemMeta();
-			meta.setDisplayName(ChatColor.YELLOW + "MegaCoins: " + ChatColor.GRAY + MegaData.getCoins(p.getName()));
+			meta.setDisplayName(ChatColor.YELLOW + "MegaCoins: " + ChatColor.GRAY + main.MegaData.getMegaCoins(p));
 			ArrayList<String> lore = new ArrayList<>();
 			lore.clear();
 			meta.setLore(lore);
