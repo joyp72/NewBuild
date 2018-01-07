@@ -2,6 +2,7 @@ name: Build
 author: likeapig
 version: 1.0.0
 main: com.likeapig.build.Build
+depend: [WorldGuard, WorldEdit, MegaData]
 
 commands:
   b:

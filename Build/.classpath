@@ -7,5 +7,8 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Users/kokpa/Documents/spigot.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kokpa/Documents/worldguard-6.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kokpa/Documents/worldedit-bukkit-6.1.7.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kokpa/Documents/MegaData.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

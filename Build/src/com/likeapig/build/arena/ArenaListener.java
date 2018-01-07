@@ -30,6 +30,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.likeapig.build.Build;
 import com.likeapig.build.commands.MessageManager;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class ArenaListener implements Listener {
 	private static ArenaListener instance;
@@ -85,7 +89,9 @@ public class ArenaListener implements Listener {
 		Player p = e.getPlayer();
 		Arena a = ArenaManager.get().getArena(p);
 		if (a != null) {
-			if (p.getItemInHand().getType() == Material.WATER_BUCKET || p.getItemInHand().getType() == Material.INK_SACK
+			if (p.getItemInHand().getType() == Material.WATER_BUCKET
+					|| p.getItemInHand().getType() == Material.ARMOR_STAND
+					|| p.getItemInHand().getType() == Material.INK_SACK
 					|| p.getItemInHand().getType() == Material.ENDER_PEARL
 					|| p.getItemInHand().getType() == Material.EYE_OF_ENDER
 					|| p.getItemInHand().getType() == Material.LAVA_BUCKET
@@ -96,8 +102,23 @@ public class ArenaListener implements Listener {
 					|| p.getItemInHand().getType() == Material.SIGN_POST
 					|| p.getItemInHand().getType() == Material.WALL_SIGN) {
 				e.setCancelled(true);
+				return;
+			}
+		} else if (getRegion(p)) {
+			e.setCancelled(true);
+		}
+	}
+	
+	public boolean getRegion(Player p) {
+		WorldGuardPlugin wgp = WorldGuardPlugin.inst();
+		RegionManager regionManager = wgp.getRegionManager(p.getWorld());
+		ApplicableRegionSet set = regionManager.getApplicableRegions(p.getLocation());
+		for (ProtectedRegion region : set) {
+			if (region.getId().equalsIgnoreCase("buildit")) {
+				return true;
 			}
 		}
+		return false;
 	}
 
 	@EventHandler

@@ -41,6 +41,7 @@ public class Arena {
 	private BossBar b;
 	private int id;
 	public static List<String> usedWords = new ArrayList<String>();
+	private boolean ending = false;
 
 	public Arena(String name, Location location) {
 		state = ArenaState.STOPPED;
@@ -191,6 +192,7 @@ public class Arena {
 	public void endRound() {
 		Timer.get().stopTasks(this);
 		countdown = 0;
+		ending = true;
 		for (Player pl : getPlayers()) {
 			Titles.get().addTitle(pl, " ");
 			Titles.get().addSubTitle(pl,
@@ -332,31 +334,48 @@ public class Arena {
 		String s = e.getMessage().toLowerCase();
 		Player p = e.getPlayer();
 		if (isStarted()) {
-			if (p.equals(builder)) {
-				MessageManager.get().message(p, "You cannot talk while building", MessageType.BAD);
-				e.setCancelled(true);
-				return;
-			}
-			Data d = getData(p);
-			if (d.guessedWord()) {
-				MessageManager.get().message(p, "You have already guessed the word", MessageType.BAD);
-				e.setCancelled(true);
-				return;
-			}
-			if (s.contains(word.toLowerCase())) {
-				e.setCancelled(true);
-				onWordGuessed(d);
+			if (!ending) {
+				if (p.equals(builder)) {
+					MessageManager.get().message(p, "You cannot talk while building", MessageType.BAD);
+					e.setCancelled(true);
+					return;
+				}
+				Data d = getData(p);
+				if (d.guessedWord()) {
+					MessageManager.get().message(p, "You have already guessed the word", MessageType.BAD);
+					e.setCancelled(true);
+					return;
+				}
+				if (s.contains(word.toLowerCase())) {
+					e.setCancelled(true);
+					onWordGuessed(d);
+				} else {
+					e.setCancelled(true);
+					for (Player pl : getPlayers()) {
+						pl.sendMessage(ChatColor.GRAY + p.getName() + ": " + e.getMessage());
+					}
+					return;
+				}
 			} else {
-				e.setMessage(ChatColor.GRAY + e.getMessage());
+				e.setCancelled(true);
+				for (Player pl : getPlayers()) {
+					pl.sendMessage(ChatColor.GRAY + p.getName() + ": " + e.getMessage());
+				}
+				return;
 			}
 		} else {
-			e.setMessage(ChatColor.GRAY + e.getMessage());
+			e.setCancelled(true);
+			for (Player pl : getPlayers()) {
+				pl.sendMessage(ChatColor.GRAY + p.getName() + ": " + e.getMessage());
+			}
+			return;
 		}
 	}
 
 	public void startNewRound() {
 		getNewWord();
 		wordGuessed = false;
+		ending = false;
 		boolean flag = builder == null;
 		Data selected = null;
 		for (Data p : datas) {
@@ -387,12 +406,13 @@ public class Arena {
 					winners.add(p2);
 				}
 			}
-			for (Data da : datas) {
-				if (!winners.contains(da)) {
-					MegaData.addCoins(da.getPlayer().getName(), 1);
-					MessageManager.get().message(da.getPlayer(), ChatColor.BLUE + "§lYou gained a MegaCoin!");
-				}
-			}
+			// for (Data da : datas) {
+			// if (!winners.contains(da)) {
+			// MegaData.addCoins(da.getPlayer().getName(), 1);
+			// MessageManager.get().message(da.getPlayer(), ChatColor.BLUE + "§lYou gained a
+			// MegaCoin!");
+			// }
+			// }
 			message(ChatColor.GOLD + "GAME OVER");
 			for (Player p : getPlayers()) {
 				Titles.get().addTitle(p, "§c§lGAME OVER");
@@ -405,7 +425,8 @@ public class Arena {
 					} else {
 						s = String.valueOf(s) + ", " + d.getPlayer().getName() + " (" + d.getScore() + ")";
 					}
-					MegaData.addCoins(d.getPlayer().getName(), 5);
+					// MegaData.addCoins(d.getPlayer().getName(), 5);
+					main.MegaData.addMegaCoins(d.getPlayer(), 3);
 					MegaData.addGW(d.getPlayer().getName(), 1);
 					MessageManager.get().message(d.getPlayer(), ChatColor.BLUE + "§lYou gained 5 MegaCoins!");
 				}
@@ -432,7 +453,8 @@ public class Arena {
 					Titles.get().addSubTitle(p, "§6Winner: " + winners.get(0).getPlayer().getName() + " ("
 							+ winners.get(0).getScore() + ")");
 				}
-				MegaData.addCoins(winners.get(0).getPlayer().getName(), 5);
+				// MegaData.addCoins(winners.get(0).getPlayer().getName(), 5);
+				main.MegaData.addMegaCoins(winners.get(0).getPlayer(), 3);
 				MegaData.addGW(winners.get(0).getPlayer().getName(), 1);
 				MessageManager.get().message(winners.get(0).getPlayer(), ChatColor.BLUE + "§lYou gained 5 MegaCoins!");
 				firework(getSpawn());
@@ -504,6 +526,10 @@ public class Arena {
 
 	public int getCountdown() {
 		return countdown;
+	}
+
+	public List<String> getUsed() {
+		return usedWords;
 	}
 
 	public List<Player> getPlayers() {
